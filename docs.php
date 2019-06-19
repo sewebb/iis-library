@@ -1,14 +1,12 @@
 <?php // phpcs:ignoreFile
 
 $structure = new SimpleXMLElement( file_get_contents( __DIR__ . '/docs/structure.xml' ) );
-$markdown = '';
+$markdown = "# API\n";
+$markdown .= "[View code](src/helpers.php)\n\n";
 
 foreach ($structure->file->function as $function) {
-	$markdown .= "## {$function->name}\n";
-	$markdown .= "{$function->docblock->description}\n\n";
-
-	$params  = "| Param | Type | Description |\n";
-	$params .= "| ----- | ---- | ----------- |\n";
+	$line = $function->docblock['line'];
+	$symbol = [];
 	$tags = [];
 
 	foreach ($function->docblock->tag as $tag) {
@@ -19,20 +17,38 @@ foreach ($structure->file->function as $function) {
 			$tags[$name] = [];
 		}
 
-		$tags[$name][] = [
+		$tags[$name][$attributes['variable']] = [
 			'description' => $attributes['description'],
 			'type' => $attributes['type'],
 			'variable' => $attributes['variable'],
 		];
 	}
 
+	foreach ($function->argument as $argument) {
+		$name = (string)$argument->name;
+
+		if (isset($tags['param'][$name])) {
+			$tags['param'][$name]['default'] = $argument->default;
+		}
+	}
+
+	$params  = "| Param | Type | Default | Description |\n";
+	$params .= "| ----- | ---- | ------- | ----------- |\n";
+
 	foreach ($tags['param'] as $param) {
 		$variable = strip_tags($param['variable']);
 		$type = strip_tags($param['type']);
 		$description = strip_tags($param['description']);
+		$default = strip_tags($param['default']);
 
-		$params .= "| {$variable} | {$type} | {$description} |\n";
+		$params .= "| {$variable} | {$type} | {$default} | {$description} |\n";
+
+		$symbol[] = "{$type} {$string}";
 	}
+
+	$markdown .= "## {$function->name}\n";
+	$markdown .= "_[View code at line {$line}](src/helpers.php#L{$line})_\n\n";
+	$markdown .= "{$function->docblock->description}\n\n";
 
 	$markdown .= "{$params}\n";
 	$markdown .= "__Return value__\n\n";
