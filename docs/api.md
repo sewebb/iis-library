@@ -14,7 +14,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| mixed | The value (if found) for the given key. |
 
 ## iis_remember
 _[View code at line 36](../src/helpers.php#L36)_
@@ -31,7 +31,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| mixed|null |  |
 
 ## iis_safe_get_input
 _[View code at line 54](../src/helpers.php#L54)_
@@ -46,7 +46,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| array|string |  |
 
 ## iis_safe_get
 _[View code at line 74](../src/helpers.php#L74)_
@@ -62,7 +62,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| null|string |  |
 
 ## iis_active_class
 _[View code at line 95](../src/helpers.php#L95)_
@@ -81,7 +81,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| void |  |
 
 ## iis_active
 _[View code at line 110](../src/helpers.php#L110)_
@@ -99,7 +99,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| boolean|string|void |  |
 
 ## iis_mix_manifest
 _[View code at line 131](../src/helpers.php#L131)_
@@ -113,7 +113,7 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| array|null |  |
 
 ## iis_mix
 _[View code at line 156](../src/helpers.php#L156)_
@@ -129,5 +129,5 @@ __Return value__
 
 | Type | Description |
 | ---- | ----------- |
-|  |  |
+| string|null |  |
 

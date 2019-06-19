@@ -13,6 +13,15 @@ foreach ($structure->file->function as $function) {
 		$attributes = ((array)$tag->attributes())['@attributes'];
 		$name = $attributes['name'];
 
+		if ($name == 'return') {
+			$tags[$name] = [
+				'description' => $attributes['description'],
+				'type' => $attributes['type'],
+			];
+
+			continue;
+		}
+
 		if (!isset($tags[$name])) {
 			$tags[$name] = [];
 		}
@@ -54,7 +63,7 @@ foreach ($structure->file->function as $function) {
 	$markdown .= "__Return value__\n\n";
 
 	if (isset($tags['return'])) {
-		$return = $tags['return'][0];
+		$return = $tags['return'];
 		$type = strip_tags($return['type']);
 		$description = strip_tags($return['description']);
 
