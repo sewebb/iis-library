@@ -1,10 +1,7 @@
-# IIS Library
-
-Useful helpers for WordPress theme development
+<h1 align="center">IIS Library</h1>
+<p align="center">Useful helpers for WordPress theme development</p>
 
 ## Install
-
-Add repo to composer repositories and require:
 
 ```
 composer require iis/library
