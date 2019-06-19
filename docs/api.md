@@ -2,7 +2,7 @@
 [View code](src/helpers.php)
 
 ## iis_config
-_[View code at line 10](src/helpers.php#L10)_
+_[View code at line 10](../src/helpers.php#L10)_
 
 IIS Start config helper
 
