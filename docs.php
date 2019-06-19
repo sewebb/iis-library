@@ -2,7 +2,7 @@
 
 $structure = new SimpleXMLElement( file_get_contents( __DIR__ . '/docs/structure.xml' ) );
 $markdown = "# API\n";
-$markdown .= "[View code](src/helpers.php)\n\n";
+$markdown .= "[View code](../src/helpers.php)\n\n";
 
 foreach ($structure->file->function as $function) {
 	$line = $function->docblock['line'];
@@ -47,7 +47,7 @@ foreach ($structure->file->function as $function) {
 	}
 
 	$markdown .= "## {$function->name}\n";
-	$markdown .= "_[View code at line {$line}](src/helpers.php#L{$line})_\n\n";
+	$markdown .= "_[View code at line {$line}](../src/helpers.php#L{$line})_\n\n";
 	$markdown .= "{$function->docblock->description}\n\n";
 
 	$markdown .= "{$params}\n";

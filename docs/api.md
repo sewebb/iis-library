@@ -1,8 +1,8 @@
 # API
-[View code](src/helpers.php)
+[View code](../src/helpers.php)
 
 ## iis_config
-_[View code at line 10](src/helpers.php#L10)_
+_[View code at line 10](../src/helpers.php#L10)_
 
 IIS Start config helper
 
@@ -17,7 +17,7 @@ __Return value__
 |  |  |
 
 ## iis_remember
-_[View code at line 36](src/helpers.php#L36)_
+_[View code at line 36](../src/helpers.php#L36)_
 
 Cache return value of callback if not already cached and return the contents
 
@@ -34,7 +34,7 @@ __Return value__
 |  |  |
 
 ## iis_safe_get_input
-_[View code at line 54](src/helpers.php#L54)_
+_[View code at line 54](../src/helpers.php#L54)_
 
 Escape input recursively
 
@@ -49,7 +49,7 @@ __Return value__
 |  |  |
 
 ## iis_safe_get
-_[View code at line 74](src/helpers.php#L74)_
+_[View code at line 74](../src/helpers.php#L74)_
 
 Return a safe GET value with an optional default value.
 
@@ -65,7 +65,7 @@ __Return value__
 |  |  |
 
 ## iis_active_class
-_[View code at line 95](src/helpers.php#L95)_
+_[View code at line 95](../src/helpers.php#L95)_
 
 Echo an "active"-class if the comparison is true, otherwise
 an empty string.
@@ -84,7 +84,7 @@ __Return value__
 |  |  |
 
 ## iis_active
-_[View code at line 110](src/helpers.php#L110)_
+_[View code at line 110](../src/helpers.php#L110)_
 
 Echo a string if the comparison is true, otherwise empty string
 
@@ -102,7 +102,7 @@ __Return value__
 |  |  |
 
 ## iis_mix_manifest
-_[View code at line 131](src/helpers.php#L131)_
+_[View code at line 131](../src/helpers.php#L131)_
 
 Get the laravel mix manifest
 
@@ -116,7 +116,7 @@ __Return value__
 |  |  |
 
 ## iis_mix
-_[View code at line 156](src/helpers.php#L156)_
+_[View code at line 156](../src/helpers.php#L156)_
 
 Get the path to a versioned Mix file
 
