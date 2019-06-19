@@ -28,13 +28,13 @@ if ( ! function_exists( 'iis_remember' ) ) {
 	/**
 	 * Cache return value of callback if not already cached and return the contents
 	 *
-	 * @param string   $cache_key  The name of the cached content
-	 * @param int      $cache_time How long the content should be cached
-	 * @param callable $callback   The callback that returns the content that should be cached
+	 * @param string   $cache_key  The name of the cached content.
+	 * @param int      $cache_time How long the content should be cached.
+	 * @param callable $callback   The callback that returns the content that should be cached.
 	 * @return mixed|null
 	 */
 	function iis_remember( $cache_key, $cache_time, $callback ) {
-		$content = ( ! defined( 'WP_ENV' ) || 'production' != WP_ENV ) ? false : get_transient( $cache_key );
+		$content = ( ! defined( 'WP_ENV' ) || 'production' !== WP_ENV ) ? false : get_transient( $cache_key );
 
 		if ( false === $content ) {
 			$content = $callback();
@@ -61,7 +61,7 @@ function iis_safe_get_input( $input ) {
 		);
 	}
 
-	return wp_strip_all_tags( wp_unslash( $input ) );
+	return sanitize_text_field( wp_unslash( $input ) );
 }
 
 /**
@@ -72,11 +72,14 @@ function iis_safe_get_input( $input ) {
  * @return null|string
  */
 function iis_safe_get( $key, $default = null ) {
+	// Ignore nonce check for $_GET variables.
+	// phpcs:disable
 	if ( ! isset( $_GET[ $key ] ) ) {
 		return $default;
 	}
 
 	return iis_safe_get_input( $_GET[ $key ] );
+	// phpcs:enable
 }
 
 /**
@@ -87,11 +90,12 @@ function iis_safe_get( $key, $default = null ) {
  * @param string $compare_with The value to compare with.
  * @param string $class The class that should be echoed if true.
  * @param bool   $include_attr True if class attribute should be included.
+ * @return void
  */
 function iis_active_class( $value, $compare_with = null, $class = 'is-active', $include_attr = true ) {
 	$attr = $include_attr ? 'class="' . esc_attr( $class ) . '"' : esc_attr( $class );
 
-	echo iis_active( $value, $compare_with, $attr, true );
+	iis_active( $value, $compare_with, $attr, true );
 }
 
 /**
@@ -145,8 +149,8 @@ function iis_mix_manifest() {
 /**
  * Get the path to a versioned Mix file
  *
- * @param $path
- * @param string $base
+ * @param string $path Path tp mix manifest.
+ * @param string $base Base path to scripts.
  * @return string|null
  */
 function iis_mix( $path, $base = '/assets/' ) {
@@ -158,9 +162,9 @@ function iis_mix( $path, $base = '/assets/' ) {
 
 	$path = $base . $path;
 
-	if ( ! isset( $manifest[$path] ) ) {
+	if ( ! isset( $manifest[ $path ] ) ) {
 		return null;
 	}
 
-	return $manifest[$path];
+	return $manifest[ $path ];
 }

@@ -18,6 +18,7 @@
   ],
   "require": {
     "php": "^7.2",
+    "ext-json": "*",
     "composer/installers": "^1.6"
   },
   "require-dev": {
@@ -44,7 +45,10 @@
     }
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit",
+    "lint": "phpcs -p --standard=phpcs.xml --extensions=php src",
+    "php-fix": "phpcbf -p --standard=phpcs.xml --extensions=php src",
+    "php-blame": "phpcs -p --standard=phpcs.xml --report=gitblame --extensions=php src"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
