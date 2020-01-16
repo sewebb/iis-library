@@ -114,7 +114,7 @@ if ( ! function_exists( 'iis_active' ) ) {
 	 * @param bool         $echo True if class attribute should be included.
 	 * @return bool|string|void
 	 */
-	function iis_active( $value, $compare_with = null, $attr = ' checked', $echo = true ) {
+	function iis_active( $value, $compare_with = null, $attr = 'checked', $echo = true ) {
 		$value = (string) $value;
 
 		if ( is_null( $compare_with ) ) {
@@ -127,7 +127,7 @@ if ( ! function_exists( 'iis_active' ) ) {
 			return $active;
 		}
 
-		echo esc_html( ( $active ) ? $attr : '' );
+		echo esc_html( ( $active ) ? ' ' . $attr : '' );
 	}
 }
 
