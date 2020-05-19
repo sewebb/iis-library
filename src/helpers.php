@@ -180,3 +180,24 @@ if ( ! function_exists( 'iis_mix' ) ) {
 		return $manifest[ $path ];
 	}
 }
+
+if ( ! function_exists( 'iis_has_hero' ) ) {
+	/**
+	 * Checks if content starts with a hero
+	 *
+	 * @return bool
+	 */
+	function iis_has_hero() {
+		$content = get_the_content();
+
+		if ( has_blocks( $content ) ) {
+			$blocks = parse_blocks( $content );
+
+			if ( $blocks[0]['blockName'] === 'iis/hero' ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+}
