@@ -4,7 +4,7 @@ namespace Internetstiftelsen;
 
 class Theme {
 	public static function init() {
-		add_action( 'after_setup_theme', 'self::theme_setup' );
+		add_action( 'after_setup_theme', [Theme::class, 'theme_setup'] );
 	}
 
 	public static function theme_setup() {
