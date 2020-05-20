@@ -5,6 +5,8 @@ namespace Internetstiftelsen;
 class Theme {
 	public static function init() {
 		add_action( 'after_setup_theme', [Theme::class, 'theme_setup'] );
+
+		require_once __DIR__ . '/blocks/index.php';
 	}
 
 	public static function theme_setup() {
