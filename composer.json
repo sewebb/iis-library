@@ -33,7 +33,7 @@
   },
   "autoload": {
     "psr-4": {
-      "IIS\\Library\\": "src/"
+      "Internetstiftelsen\\": "src/"
     },
     "files": [
       "src/helpers.php"
