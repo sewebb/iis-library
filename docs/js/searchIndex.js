@@ -46,11 +46,6 @@ Search.appendIndex(
             "summary": "Checks\u0020if\u0020content\u0020starts\u0020with\u0020a\u0020hero",
             "url": "../namespaces/default.html#function_iis_has_hero"
         },                {
-            "fqsen": "\\iis_render_block_blockquote\u0028\u0029",
-            "name": "iis_render_block_blockquote",
-            "summary": "",
-            "url": "../namespaces/default.html#function_iis_render_block_blockquote"
-        },                {
             "fqsen": "\\Internetstiftelsen\\Theme",
             "name": "Theme",
             "summary": "",
