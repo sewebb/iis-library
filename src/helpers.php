@@ -193,11 +193,44 @@ if ( ! function_exists( 'iis_has_hero' ) ) {
 		if ( has_blocks( $content ) ) {
 			$blocks = parse_blocks( $content );
 
-			if ( $blocks[0]['blockName'] === 'iis/hero' ) {
+			if ( 'iis/hero' === $blocks[0]['blockName'] ) {
 				return true;
 			}
 		}
 
 		return false;
+	}
+}
+
+if ( ! function_exists( 'imns' ) ) {
+	/**
+	 * Get and echo the styleguide namespace, set in .env-file of the theme
+	 *
+	 * @param string $class Class names, separated by space
+	 * @param bool   $echo true for echo and false to return the string
+	 * @return void|string
+	 */
+	function imns( $class, $echo = true ) {
+		$namespace = apply_filters( 'iis_blocks_namespace', env( 'IIS_NAMESPACE', 'iis-' ) );
+		$classes   = array_map(
+			function ( $single_class ) use ( $namespace ) {
+				if ( strpos( $single_class, '!' ) === 0 ) {
+					return substr( $single_class, 1 );
+				}
+
+				return $namespace . $single_class;
+			},
+			explode( ' ', $class )
+		);
+
+		$classes = implode( ' ', $classes );
+
+		if ( $echo ) {
+			echo esc_attr( $classes );
+
+			return;
+		}
+
+		return $classes;
 	}
 }

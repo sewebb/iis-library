@@ -48,7 +48,8 @@
     "test": "phpunit",
     "lint": "phpcs -p --standard=phpcs.xml --extensions=php src",
     "php-fix": "phpcbf -p --standard=phpcs.xml --extensions=php src",
-    "php-blame": "phpcs -p --standard=phpcs.xml --report=gitblame --extensions=php src"
+    "php-blame": "phpcs -p --standard=phpcs.xml --report=gitblame --extensions=php src",
+    "docs": "php phpDocumentor.phar -d ./src --ignore .src/blocks -t docs --title \"IIS Library\""
   },
   "minimum-stability": "dev",
   "prefer-stable": true

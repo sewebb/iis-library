@@ -46,6 +46,11 @@ Search.appendIndex(
             "summary": "Checks\u0020if\u0020content\u0020starts\u0020with\u0020a\u0020hero",
             "url": "../namespaces/default.html#function_iis_has_hero"
         },                {
+            "fqsen": "\\imns\u0028\u0029",
+            "name": "imns",
+            "summary": "Get\u0020and\u0020echo\u0020the\u0020styleguide\u0020namespace,\u0020set\u0020in\u0020.env\u002Dfile\u0020of\u0020the\u0020theme",
+            "url": "../namespaces/default.html#function_imns"
+        },                {
             "fqsen": "\\Internetstiftelsen\\Theme",
             "name": "Theme",
             "summary": "",
