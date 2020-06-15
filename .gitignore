@@ -1,2 +1,4 @@
 vendor
 docs/phpdoc-cache-*
+/.phpdoc
+/phpDocumentor.phar
