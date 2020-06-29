@@ -55,5 +55,8 @@ class Theme {
 				],
 			]
 		);
+
+		// Don't use the texturize function, show posts as is
+		add_filter( 'run_wptexturize', '__return_false' );
 	}
 }
