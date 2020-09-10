@@ -234,3 +234,31 @@ if ( ! function_exists( 'imns' ) ) {
 		return $classes;
 	}
 }
+
+if ( ! function_exists( 'iis_uses_styleguide' ) ) {
+	/**
+	 * Check if theme is using the styleguide
+	 *
+	 * @return bool
+	 */
+	function iis_uses_styleguide() {
+		if ( ! defined( 'PROJECT_ROOT' ) ) {
+			return false;
+		}
+
+		return file_exists( PROJECT_ROOT . '/node_modules/@internetstiftelsen/styleguide' );
+	}
+}
+
+if ( ! function_exists( 'iis_styleguide_sprite' ) ) {
+	/**
+	 * Print IIS styleguide icon sprite
+	 *
+	 * @return void
+	 */
+	function iis_styleguide_sprite() {
+		if ( iis_uses_styleguide() ) {
+			echo file_get_contents( PROJECT_ROOT . '/node_modules/@internetstiftelsen/styleguide/src/atoms/icon/sprite.svg' );
+		}
+	}
+}
