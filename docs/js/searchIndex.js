@@ -51,6 +51,16 @@ Search.appendIndex(
             "summary": "Get\u0020and\u0020echo\u0020the\u0020styleguide\u0020namespace,\u0020set\u0020in\u0020.env\u002Dfile\u0020of\u0020the\u0020theme",
             "url": "../namespaces/default.html#function_imns"
         },                {
+            "fqsen": "\\iis_uses_styleguide\u0028\u0029",
+            "name": "iis_uses_styleguide",
+            "summary": "Check\u0020if\u0020theme\u0020is\u0020using\u0020the\u0020styleguide",
+            "url": "../namespaces/default.html#function_iis_uses_styleguide"
+        },                {
+            "fqsen": "\\iis_styleguide_sprite\u0028\u0029",
+            "name": "iis_styleguide_sprite",
+            "summary": "Print\u0020IIS\u0020styleguide\u0020icon\u0020sprite",
+            "url": "../namespaces/default.html#function_iis_styleguide_sprite"
+        },                {
             "fqsen": "\\Internetstiftelsen\\Theme",
             "name": "Theme",
             "summary": "",
