@@ -207,7 +207,7 @@ if ( ! function_exists( 'imns' ) ) {
 	 * Get and echo the styleguide namespace, set in .env-file of the theme
 	 *
 	 * @param string $class Class names, separated by space
-	 * @param bool   $echo true for echo and false to return the string
+	 * @param bool   $echo  true for echo and false to return the string
 	 * @return void|string
 	 */
 	function imns( $class, $echo = true ) {
