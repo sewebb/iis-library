@@ -257,8 +257,16 @@ if ( ! function_exists( 'iis_styleguide_sprite' ) ) {
 	 * @return void
 	 */
 	function iis_styleguide_sprite() {
-		if ( iis_uses_styleguide() ) {
-			echo file_get_contents( PROJECT_ROOT . '/node_modules/@internetstiftelsen/styleguide/src/atoms/icon/sprite.svg' );
-		}
+		echo iis_remember(
+			'iis_styleguide_sprite',
+			0,
+			function () {
+				if ( iis_uses_styleguide() ) {
+					return file_get_contents( PROJECT_ROOT . '/node_modules/@internetstiftelsen/styleguide/src/atoms/icon/sprite.svg' );
+				}
+
+				return null;
+			}
+		);
 	}
 }
