@@ -4,10 +4,11 @@ if ( ! function_exists( 'iis_config' ) ) {
 	/**
 	 * IIS Start config helper
 	 *
-	 * @param  string $keys the key to get the value for. Use dot notation for going deeper.
+	 * @param string $keys         the key to get the value for. Use dot notation for going deeper.
+	 * @param mixed|null $fallback fallback if value is missing
 	 * @return mixed     The value (if found) for the given key.
 	 */
-	function iis_config( $keys ) {
+	function iis_config( string $keys, $fallback = null ) {
 		$keys  = explode( '.', $keys );
 		$value = include get_template_directory() . '/config.php';
 
@@ -15,7 +16,7 @@ if ( ! function_exists( 'iis_config' ) ) {
 			if ( isset( $value[ $key ] ) ) {
 				$value = $value[ $key ];
 			} else {
-				$value = null;
+				$value = $fallback;
 				break;
 			}
 		}
