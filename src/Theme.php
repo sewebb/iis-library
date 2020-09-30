@@ -19,6 +19,11 @@ class Theme {
 			'editor-color-palette',
 			[
 				[
+					'name'  => 'Cyberspace',
+					'slug'  => 'cyberspace',
+					'color' => '#1f2a36',
+				],
+				[
 					'name'  => 'Ocean dark',
 					'slug'  => 'ocean-dark',
 					'color' => '#0477ce',
