@@ -84,10 +84,19 @@ class Theme {
 		if ( defined( 'WP_ENV' ) && in_array( WP_ENV, [ 'stage', 'dev' ], true ) ) {
 			$banner_text = ( 'stage' === WP_ENV ) ? 'STAGE' : 'DEV'; ?>
 
-			<div class="ribbon">
+			<div class="ribbon js-ribbon">
 				<?php echo $banner_text; ?>
 			</div>
 
+			<script type="text/javascript">
+				var ribbonElement = document.querySelector('.js-ribbon');
+				ribbonElement.addEventListener('mouseover', () => {
+					ribbonElement.classList.add('is-hidden');
+					setTimeout(function() {
+						ribbonElement.classList.remove('is-hidden');
+					}, 4000);
+				});
+			</script>
 			<style media="screen">
 				.ribbon {
 					position: fixed;
@@ -96,17 +105,18 @@ class Theme {
 					bottom: 0;
 					left: 0;
 					padding: 0.5rem 0;
-					-webkit-transform: translateX(-33.33%) rotate(45deg);
 					transform: translateX(-33.33%) rotate(45deg);
-					-webkit-transform-origin: bottom right;
 					transform-origin: bottom right;
-					border: 0;
 					background-color: #e0bff5;
 					font-family: "HK Grotesk Semibold", sans-serif;
 					font-family: sans-serif;
 					font-size: 12px;
 					text-align: center;
 					text-transform: uppercase;
+				}
+
+				.ribbon.is-hidden {
+					display: none;
 				}
 
 				.ribbon::before,
@@ -139,6 +149,7 @@ class Theme {
 						font-size: 18px;
 					}
 				}
+
 			</style>
 
 			<?php
