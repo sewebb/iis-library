@@ -34,9 +34,24 @@ class Theme {
 					'color' => '#1f2a36',
 				],
 				[
+					'name'  => 'Ocean',
+					'slug'  => 'ocean',
+					'color' => '#50b2fc',
+				],
+				[
+					'name'  => 'Ocean light',
+					'slug'  => 'ocean-light',
+					'color' => '#a7d8fd',
+				],
+				[
 					'name'  => 'Ocean dark',
 					'slug'  => 'ocean-dark',
 					'color' => '#0477ce',
+				],
+				[
+					'name'  => 'Ruby',
+					'slug'  => 'ruby',
+					'color' => '#ff4069',
 				],
 				[
 					'name'  => 'Ruby light',
@@ -47,6 +62,11 @@ class Theme {
 					'name'  => 'Ruby dark',
 					'slug'  => 'ruby-dark',
 					'color' => '#d9002f',
+				],
+				[
+					'name'  => 'Jade',
+					'slug'  => 'jade',
+					'color' => '#55c7b4',
 				],
 				[
 					'name'  => 'Jade light',
@@ -67,6 +87,26 @@ class Theme {
 					'name'  => 'Lemon light',
 					'slug'  => 'lemon-light',
 					'color' => '#ffe696',
+				],
+				[
+					'name'  => 'Peacock',
+					'slug'  => 'peacock',
+					'color' => '#c27fec',
+				],
+				[
+					'name'  => 'Peacock light',
+					'slug'  => 'peacock-light',
+					'color' => '#e0bff5',
+				],
+				[
+					'name'  => 'Sandstone',
+					'slug'  => 'sandstone',
+					'color' => '#f99963',
+				],
+				[
+					'name'  => 'Sandstone light',
+					'slug'  => 'sandstone-light',
+					'color' => '#fcccb1',
 				],
 			]
 		);
