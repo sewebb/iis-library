@@ -41,10 +41,20 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020path\u0020to\u0020a\u0020versioned\u0020Mix\u0020file",
             "url": "../namespaces/default.html#function_iis_mix"
         },                {
+            "fqsen": "\\iis_get_hero\u0028\u0029",
+            "name": "iis_get_hero",
+            "summary": "Get\u0020the\u0020content\u0020hero",
+            "url": "../namespaces/default.html#function_iis_get_hero"
+        },                {
             "fqsen": "\\iis_has_hero\u0028\u0029",
             "name": "iis_has_hero",
             "summary": "Checks\u0020if\u0020content\u0020starts\u0020with\u0020a\u0020hero",
             "url": "../namespaces/default.html#function_iis_has_hero"
+        },                {
+            "fqsen": "\\iis_has_full_hero\u0028\u0029",
+            "name": "iis_has_full_hero",
+            "summary": "Checks\u0020if\u0020content\u0020starts\u0020with\u0020a\u0020full\u002Dwidth\u0020hero",
+            "url": "../namespaces/default.html#function_iis_has_full_hero"
         },                {
             "fqsen": "\\imns\u0028\u0029",
             "name": "imns",
@@ -63,7 +73,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Internetstiftelsen\\Theme",
             "name": "Theme",
-            "summary": "",
+            "summary": "Setup\u0020common\u0020theme\u0020functionality",
             "url": "../classes/Internetstiftelsen-Theme.html"
         },                {
             "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Ainit\u0028\u0029",
@@ -73,8 +83,13 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Atheme_setup\u0028\u0029",
             "name": "theme_setup",
-            "summary": "",
+            "summary": "Setup\u0020theme",
             "url": "../classes/Internetstiftelsen-Theme.html#method_theme_setup"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Aenv_banner\u0028\u0029",
+            "name": "env_banner",
+            "summary": "Add\u0020environment\u0020banner\u0020on\u0020dev\u0020and\u0020stage",
+            "url": "../classes/Internetstiftelsen-Theme.html#method_env_banner"
         },                {
             "fqsen": "\\",
             "name": "\\",
