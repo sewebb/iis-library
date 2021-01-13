@@ -182,6 +182,27 @@ if ( ! function_exists( 'iis_mix' ) ) {
 	}
 }
 
+if ( ! function_exists( 'iis_get_hero' ) ) {
+	/**
+	 * Get the content hero
+	 *
+	 * @return mixed
+	 */
+	function iis_get_hero() {
+		$content = get_the_content();
+
+		if ( has_blocks( $content ) ) {
+			$blocks = parse_blocks( $content );
+
+			if ( 'iis/hero' === $blocks[0]['blockName'] ) {
+				return $blocks[0];
+			}
+		}
+
+		return null;
+	}
+}
+
 if ( ! function_exists( 'iis_has_hero' ) ) {
 	/**
 	 * Checks if content starts with a hero
@@ -189,17 +210,22 @@ if ( ! function_exists( 'iis_has_hero' ) ) {
 	 * @return bool
 	 */
 	function iis_has_hero() {
-		$content = get_the_content();
+		$hero = iis_get_hero();
 
-		if ( has_blocks( $content ) ) {
-			$blocks = parse_blocks( $content );
+		return null !== $hero;
+	}
+}
 
-			if ( 'iis/hero' === $blocks[0]['blockName'] ) {
-				return true;
-			}
-		}
+if ( ! function_exists( 'iis_has_full_hero' ) ) {
+	/**
+	 * Checks if content starts with a full-width hero
+	 *
+	 * @return bool
+	 */
+	function iis_has_full_hero() {
+		$hero = iis_get_hero();
 
-		return false;
+		return $hero && 'full' === ( $hero['attrs']['align'] ?? 'wide' );
 	}
 }
 
