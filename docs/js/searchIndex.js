@@ -91,6 +91,16 @@ Search.appendIndex(
             "summary": "Add\u0020environment\u0020banner\u0020on\u0020dev\u0020and\u0020stage",
             "url": "../classes/Internetstiftelsen-Theme.html#method_env_banner"
         },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Asubmenu\u0028\u0029",
+            "name": "submenu",
+            "summary": "",
+            "url": "../classes/Internetstiftelsen-Theme.html#method_submenu"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Aexclude_pingbacks\u0028\u0029",
+            "name": "exclude_pingbacks",
+            "summary": "Exclude\u0020xmlrpc\u0020method\u0020pingback.ping\nThis\u0020prevents\u0020other\u0020sites\u0020from\u0020inserting\u0020pingback\u0020comments\u0020into\u0020our\u0020database",
+            "url": "../classes/Internetstiftelsen-Theme.html#method_exclude_pingbacks"
+        },                {
             "fqsen": "\\",
             "name": "\\",
             "summary": "",
