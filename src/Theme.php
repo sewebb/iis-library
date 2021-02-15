@@ -10,6 +10,7 @@ class Theme {
 		add_action( 'after_setup_theme', [ Theme::class, 'theme_setup' ] );
 		add_action( 'wp_footer', [ Theme::class, 'env_banner' ] );
 		add_action( 'admin_footer', [ Theme::class, 'env_banner' ] );
+		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
 
 		require_once __DIR__ . '/blocks/index.php';
 	}
@@ -194,5 +195,17 @@ class Theme {
 
 			<?php
 		}
+	}
+
+	/**
+	 * Exclude xmlrpc method pingback.ping
+	 * This prevents other sites from inserting pingback comments into our database
+	 *
+	 * @param  array $methods Original set of allowed methods
+	 * @return array          Modified set of methods, excluding pingback.ping
+	 */
+	public function exclude_pingbacks( $methods ) {
+		unset( $methods['pingback.ping'] );
+		return $methods;
 	}
 }
