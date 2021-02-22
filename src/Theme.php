@@ -348,7 +348,7 @@ class Theme {
 		}
 
 		if ( 'iis/hero' === $block['blockName'] ) {
-			return $content .= self::submenu();
+			return $content . self::submenu();
 		}
 
 		return $content;
