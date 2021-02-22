@@ -360,7 +360,7 @@ class Theme {
 		}
 
 		if ( ! iis_has_hero() ) {
-			return $content . self::submenu();
+			return self::submenu() . $content;
 		}
 
 		return $content;
