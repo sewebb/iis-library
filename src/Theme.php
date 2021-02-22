@@ -13,6 +13,8 @@ class Theme {
 		add_action( 'wp_footer', [ Theme::class, 'env_banner' ] );
 		add_action( 'admin_footer', [ Theme::class, 'env_banner' ] );
 		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
+		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
+		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
 
 		require_once __DIR__ . '/blocks/index.php';
 	}
@@ -338,5 +340,29 @@ class Theme {
 	public function exclude_pingbacks( $methods ) {
 		unset( $methods['pingback.ping'] );
 		return $methods;
+	}
+
+	public static function append_submenu_hero( $content, $block ): string {
+		if ( ! is_page() || ! apply_filters( 'iis_render_submenu', false ) ) {
+			return $content;
+		}
+
+		if ( 'iis/hero' === $block['blockName'] ) {
+			return $content .= self::submenu();
+		}
+
+		return $content;
+	}
+
+	public static function append_submenu( $content ): string {
+		if ( ! is_page() || ! apply_filters( 'iis_render_submenu', false ) ) {
+			return $content;
+		}
+
+		if ( ! iis_has_hero() ) {
+			return $content . self::submenu();
+		}
+
+		return $content;
 	}
 }
