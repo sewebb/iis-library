@@ -217,6 +217,10 @@ class Theme {
 			]
 		);
 
+		if ( ! $all_children ) {
+			return '';
+		}
+
 		$second_level_items = [];
 		$third_level_items  = [];
 
@@ -254,13 +258,22 @@ class Theme {
 
 				foreach ( $second_level_items as $child ) :
 					$link_classes = 'm-submenu__item__link';
+					$hidden = true;
 
 					if ( isset( $third_level_items[ $child->ID ] ) ) {
 						$link_classes .= ' m-submenu__item__link--has-sublevel';
+
+						foreach ( $third_level_items[ $child->ID ] as $subchild ) {
+							if ( $subchild->ID === $post->ID ) {
+								$hidden = false;
+								break;
+							}
+						}
 					}
 
 					if ( $child->ID === $post->ID ) {
 						$link_classes .= ' !is-current';
+						$hidden        = false;
 					}
 
 					?>
@@ -277,10 +290,19 @@ class Theme {
 									<span class="u-visuallyhidden">Öppna/stäng</span>
 								</button>
 							</div>
-							<ul class="<?php imns( 'm-submenu__sublevel' ); ?>" aria-hidden="true" id="sublvl<?php echo $child->ID; ?>" data-focus-trap="false">
-								<?php foreach ( $third_level_items[ $child->ID ] as $subchild ) : ?>
+							<ul class="<?php imns( 'm-submenu__sublevel' ); ?>" <?php echo ( $hidden ) ? '' : 'data-a11y-toggle-open'; ?> id="sublvl<?php echo $child->ID; ?>" data-focus-trap="false">
+								<?php
+
+								foreach ( $third_level_items[ $child->ID ] as $subchild ) :
+									$sub_item_classes = 'm-submenu__item__link m-submenu__sublevel__item__link';
+
+									if ( $subchild->ID === $post->ID ) {
+										$sub_item_classes .= ' !is-current';
+									}
+
+									?>
 									<li class="<?php imns( 'm-submenu__sublevel__item' ); ?>">
-										<a href="<?php echo get_permalink( $subchild ); ?>" class="<?php imns( 'm-submenu__item__link m-submenu__sublevel__item__link' ); ?>">
+										<a href="<?php echo get_permalink( $subchild ); ?>" class="<?php imns( $sub_item_classes ); ?>">
 											<span><?php echo apply_filters( 'the_title', $subchild->post_title ); ?></span>
 											<svg class="icon">
 												<use xlink:href="#icon-arrow-variant"></use>
