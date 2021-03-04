@@ -240,7 +240,7 @@ class Theme {
 
 		ob_start();
 		?>
-		<div class="alignright" id="pageSubmenu">
+		<nav class="alignright" id="pageSubmenu">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
 					<?php if ( $post->ID !== $top_level->ID ) : ?>
@@ -324,7 +324,7 @@ class Theme {
 					</dd>
 				<?php endforeach; ?>
 			</dl>
-		</div>
+		</nav>
 		<?php
 
 		return ob_get_clean();
