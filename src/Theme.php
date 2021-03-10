@@ -17,6 +17,7 @@ class Theme {
 		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
 
 		require_once __DIR__ . '/blocks/index.php';
+		require_once __DIR__ . '/acf.php';
 	}
 
 	/**
@@ -219,23 +220,62 @@ class Theme {
 			]
 		);
 
-		if ( ! $all_children ) {
-			return '';
-		}
-
-		$second_level_items = [];
-		$third_level_items  = [];
+		$parent_children = [];
+		$children_parent = [];
+		$posts_by_id     = [];
+		$levels = [
+			$top_level->ID => 1,
+		];
 
 		foreach ( $all_children as $child ) {
-			if ( $child->post_parent === $top_level->ID ) {
-				$second_level_items[ $child->ID ] = $child;
-			} else {
-				if ( ! isset( $third_level_items[ $child->post_parent ] ) ) {
-					$third_level_items[ $child->post_parent ] = [];
-				}
+			$hide = get_post_meta( $child->ID, 'display_in_submenus', true );
 
-				$third_level_items[ $child->post_parent ][ $child->ID ] = $child;
+			if ( $hide === '0' ) {
+				continue;
 			}
+
+			$posts_by_id[ $child->ID ] = $child;
+
+			if ( ! isset( $parent_children[ $child->post_parent ] ) ) {
+				$parent_children[ $child->post_parent ] = [];
+			}
+
+			$parent_children[ $child->post_parent ][] = $child->ID;
+			$children_parent[ $child->ID ]            = $child->post_parent;
+		}
+
+		foreach ( $children_parent as $child => $parent ) {
+			$level = 2;
+			$top_parent = $parent;
+
+			while ( isset( $children_parent[ $top_parent ] ) ) {
+				$level++;
+				$top_parent = $children_parent[ $top_parent ];
+			}
+
+			$levels[ $child ] = $level;
+		}
+
+		$last_level = max( $levels );
+		$top_level_id = $top_level->ID;
+
+		if ( $top_level->ID === $post->ID ) {
+			// Current post is the top level. Display two levels down
+			$top_level_id = $post->ID;
+		} elseif ( isset( $parent_children[ $post->ID ] ) ) {
+			// Current post has children. Top level is post parent
+			$top_level_id = $post->post_parent;
+		} elseif ( $levels[ $post->ID ] === $last_level ) {
+			// Current post is on the last level
+			$top_level_id = $children_parent[ $post->ID ];
+
+			if ( isset( $children_parent[ $top_level_id ] ) ) {
+				$top_level_id = $children_parent[ $top_level_id ];
+			}
+		}
+
+		if ( $top_level_id !== $top_level->ID && isset( $posts_by_id[ $top_level_id ] ) ) {
+			$top_level = $posts_by_id[ $top_level_id ];
 		}
 
 		ob_start();
@@ -258,15 +298,18 @@ class Theme {
 				</dt>
 				<?php
 
-				foreach ( $second_level_items as $child ) :
+				$children = $parent_children[ $top_level->ID ];
+
+				foreach ( $children as $child ) :
+					$child        = $posts_by_id[ $child ];
 					$link_classes = 'm-submenu__item__link';
 					$hidden = true;
 
-					if ( isset( $third_level_items[ $child->ID ] ) ) {
+					if ( isset( $parent_children[ $child->ID ] ) ) {
 						$link_classes .= ' m-submenu__item__link--has-sublevel';
 
-						foreach ( $third_level_items[ $child->ID ] as $subchild ) {
-							if ( $subchild->ID === $post->ID ) {
+						foreach ( $parent_children[ $child->ID ] as $subchild ) {
+							if ( $subchild === $post->ID ) {
 								$hidden = false;
 								break;
 							}
@@ -280,7 +323,7 @@ class Theme {
 
 					?>
 					<dd class="<?php imns( 'm-submenu__item' ); ?>">
-						<?php if ( isset( $third_level_items[ $child->ID ] ) ) : ?>
+						<?php if ( isset( $parent_children[ $child->ID ] ) ) : ?>
 							<div class="<?php imns( 'm-submenu__item__sublevel' ); ?>">
 								<a href="<?php echo get_permalink( $child->ID ); ?>" class="<?php imns( $link_classes ); ?>">
 									<span><?php echo apply_filters( 'the_title', $child->post_title ); ?></span>
@@ -295,7 +338,8 @@ class Theme {
 							<ul class="<?php imns( 'm-submenu__sublevel' ); ?>" <?php echo ( $hidden ) ? '' : 'data-a11y-toggle-open'; ?> id="sublvl<?php echo $child->ID; ?>" data-focus-trap="false">
 								<?php
 
-								foreach ( $third_level_items[ $child->ID ] as $subchild ) :
+								foreach ( $parent_children[ $child->ID ] as $subchild ) :
+									$subchild         = $posts_by_id[ $subchild ];
 									$sub_item_classes = 'm-submenu__item__link m-submenu__sublevel__item__link';
 
 									if ( $subchild->ID === $post->ID ) {
@@ -327,7 +371,7 @@ class Theme {
 		</nav>
 		<?php
 
-		return ob_get_clean();
+		return str_replace( [ "\t", "\n", "\r" ], '', ob_get_clean() );
 	}
 
 	/**
