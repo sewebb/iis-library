@@ -262,9 +262,6 @@ class Theme {
 		if ( $top_level->ID === $post->ID ) {
 			// Current post is the top level. Display two levels down
 			$top_level_id = $post->ID;
-		} elseif ( isset( $parent_children[ $post->ID ] ) ) {
-			// Current post has children. Top level is post parent
-			$top_level_id = $post->post_parent;
 		} elseif ( $levels[ $post->ID ] === $last_level ) {
 			// Current post is on the last level
 			$top_level_id = $children_parent[ $post->ID ];
@@ -272,6 +269,8 @@ class Theme {
 			if ( isset( $children_parent[ $top_level_id ] ) ) {
 				$top_level_id = $children_parent[ $top_level_id ];
 			}
+		} else {
+			$top_level_id = $post->post_parent;
 		}
 
 		if ( $top_level_id !== $top_level->ID && isset( $posts_by_id[ $top_level_id ] ) ) {
