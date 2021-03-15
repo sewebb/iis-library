@@ -279,7 +279,7 @@ class Theme {
 
 		ob_start();
 		?>
-		<nav class="alignright" id="pageSubmenu">
+		<nav class="alignright u-m-t-2" id="pageSubmenu">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
 					<?php if ( $post->ID !== $top_level->ID ) : ?>
@@ -291,8 +291,8 @@ class Theme {
 						</a>
 					<?php else : ?>
 						<span class="<?php imns( 'm-submenu__title__link !u-pointer-events-none' ); ?>">
-					<span><?php echo apply_filters( 'the_title', $top_level->post_title ); ?></span>
-				</span>
+							<span><?php echo apply_filters( 'the_title', $top_level->post_title ); ?></span>
+						</span>
 					<?php endif; ?>
 				</dt>
 				<?php
