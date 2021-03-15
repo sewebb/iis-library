@@ -223,9 +223,6 @@ class Theme {
 		$parent_children = [];
 		$children_parent = [];
 		$posts_by_id     = [];
-		$levels = [
-			$top_level->ID => 1,
-		];
 
 		foreach ( $all_children as $child ) {
 			$hide = get_post_meta( $child->ID, 'display_in_submenus', true );
@@ -244,25 +241,10 @@ class Theme {
 			$children_parent[ $child->ID ]            = $child->post_parent;
 		}
 
-		foreach ( $children_parent as $child => $parent ) {
-			$level = 2;
-			$top_parent = $parent;
-
-			while ( isset( $children_parent[ $top_parent ] ) ) {
-				$level++;
-				$top_parent = $children_parent[ $top_parent ];
-			}
-
-			$levels[ $child ] = $level;
-		}
-
-		$last_level = max( $levels );
-		$top_level_id = $top_level->ID;
-
 		if ( $top_level->ID === $post->ID ) {
 			// Current post is the top level. Display two levels down
 			$top_level_id = $post->ID;
-		} elseif ( $levels[ $post->ID ] === $last_level ) {
+		} elseif ( ! isset( $parent_children[$post->ID] ) ) {
 			// Current post is on the last level
 			$top_level_id = $children_parent[ $post->ID ];
 
