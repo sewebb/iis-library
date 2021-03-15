@@ -202,7 +202,11 @@ class Theme {
 		}
 	}
 
-	public static function submenu(): string {
+	/**
+	 * @param string|bool $align
+	 * @return string
+	 */
+	public static function submenu( $align = 'right' ): string {
 		// TODO: Refactor
 		global $post;
 
@@ -259,9 +263,15 @@ class Theme {
 			$top_level = $posts_by_id[ $top_level_id ];
 		}
 
+		$wrapper_class = '';
+
+		if ( $align ) {
+			$wrapper_class .= 'u-m-t-2 align' . $align;
+		}
+
 		ob_start();
 		?>
-		<nav class="alignright u-m-t-2" id="pageSubmenu">
+		<nav class="<?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
 					<?php if ( $post->ID !== $top_level->ID ) : ?>
