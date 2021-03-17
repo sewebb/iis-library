@@ -273,7 +273,7 @@ class Theme {
 
 		ob_start();
 		?>
-		<nav class="<?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
+		<nav class="rs_skip <?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
 					<?php if ( $post->ID !== $top_level->ID ) : ?>
