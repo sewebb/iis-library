@@ -318,9 +318,6 @@ class Theme {
 							<div class="<?php imns( 'm-submenu__item__sublevel' ); ?>">
 								<a href="<?php echo get_permalink( $child->ID ); ?>" class="<?php imns( $link_classes ); ?>">
 									<span><?php echo apply_filters( 'the_title', $child->post_title ); ?></span>
-									<svg class="icon">
-										<use xlink:href="#icon-arrow-variant"></use>
-									</svg>
 								</a>
 								<button type="button" class="<?php imns( 'm-submenu__item__toggle-button' ); ?>" data-a11y-toggle="sublvl<?php echo $child->ID; ?>" aria-controls="sublvl<?php echo $child->ID; ?>">
 									<span class="u-visuallyhidden">Öppna/stäng</span>
@@ -341,9 +338,6 @@ class Theme {
 									<li class="<?php imns( 'm-submenu__sublevel__item' ); ?>">
 										<a href="<?php echo get_permalink( $subchild ); ?>" class="<?php imns( $sub_item_classes ); ?>">
 											<span><?php echo apply_filters( 'the_title', $subchild->post_title ); ?></span>
-											<svg class="icon">
-												<use xlink:href="#icon-arrow-variant"></use>
-											</svg>
 										</a>
 									</li>
 								<?php endforeach; ?>
@@ -351,9 +345,6 @@ class Theme {
 						<?php else : ?>
 							<a href="<?php echo get_permalink( $child->ID ); ?>" class="<?php imns( $link_classes ); ?>">
 								<span><?php echo apply_filters( 'the_title', $child->post_title ); ?></span>
-								<svg class="icon">
-									<use xlink:href="#icon-arrow-variant"></use>
-								</svg>
 							</a>
 						<?php endif; ?>
 					</dd>
