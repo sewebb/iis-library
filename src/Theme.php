@@ -204,13 +204,15 @@ class Theme {
 
 	/**
 	 * @param string|bool $align
+	 * @param null|WP_Post $submenu_for
 	 * @return string
 	 */
-	public static function submenu( $align = 'right' ): string {
+	public static function submenu( $align = 'right', $submenu_for = null ): string {
 		// TODO: Refactor
 		global $post;
 
-		$top_level = $post;
+		$submenu_for = ( is_null( $submenu_for ) ) ? $post : $submenu_for;
+		$top_level   = $submenu_for;
 
 		while ( $top_level && 0 !== $top_level->post_parent ) {
 			$top_level = get_post( $top_level->post_parent );
@@ -247,16 +249,16 @@ class Theme {
 
 		if ( $top_level->ID === $post->ID ) {
 			// Current post is the top level. Display two levels down
-			$top_level_id = $post->ID;
-		} elseif ( ! isset( $parent_children[$post->ID] ) ) {
+			$top_level_id = $submenu_for->ID;
+		} elseif ( ! isset( $parent_children[$submenu_for->ID] ) ) {
 			// Current post is on the last level
-			$top_level_id = $children_parent[ $post->ID ];
+			$top_level_id = $children_parent[ $submenu_for->ID ];
 
 			if ( isset( $children_parent[ $top_level_id ] ) ) {
 				$top_level_id = $children_parent[ $top_level_id ];
 			}
 		} else {
-			$top_level_id = $post->post_parent;
+			$top_level_id = $submenu_for->post_parent;
 		}
 
 		if ( $top_level_id !== $top_level->ID && isset( $posts_by_id[ $top_level_id ] ) ) {
