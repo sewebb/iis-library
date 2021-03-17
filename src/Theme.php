@@ -302,7 +302,7 @@ class Theme {
 						$link_classes .= ' m-submenu__item__link--has-sublevel';
 
 						foreach ( $parent_children[ $child->ID ] as $subchild ) {
-							if ( $subchild === $post->ID ) {
+							if ( $subchild === $submenu_for->ID ) {
 								$hidden = false;
 								break;
 							}
@@ -311,7 +311,10 @@ class Theme {
 
 					if ( $child->ID === $post->ID ) {
 						$link_classes .= ' !is-current';
-						$hidden        = false;
+					}
+
+					if ( $child->ID === $submenu_for->ID ) {
+						$hidden = false;
 					}
 
 					?>
