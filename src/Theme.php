@@ -226,6 +226,10 @@ class Theme {
 			]
 		);
 
+		if ( ! $all_children || ! count( $all_children ) ) {
+			return '';
+		}
+
 		$parent_children = [];
 		$children_parent = [];
 		$posts_by_id     = [];
