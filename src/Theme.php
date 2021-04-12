@@ -237,4 +237,94 @@ class Theme {
 
 		return $content;
 	}
+
+	/**
+	 * Enable review functionality.
+	 *
+	 * @param null|array $location
+	 * @return void
+	 */
+	public static function enableReview( $location = null ) {
+		if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+			trigger_error( 'You need to enable the plugin Advanced Custom Fields.', E_USER_WARNING );
+
+			return;
+		}
+
+		if ( $location ) {
+			$location = array_map(
+				function ( $post_type ) {
+					return [
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => $post_type,
+					];
+				},
+				$location
+			);
+		} else {
+			$location = [
+				[
+					'param'    => 'post_type',
+					'operator' => '!=',
+					'value'    => 'allow_all',
+				],
+			];
+		}
+
+		$location = [ $location ];
+
+		acf_add_local_field_group(
+			[
+				'key'                   => 'group_60742c1d479af',
+				'title'                 => __( 'Review', 'iis' ),
+				'fields'                => [
+					[
+						'key'               => 'field_60742c276dd20',
+						'label'             => __( 'Reviewed by', 'iis' ),
+						'name'              => 'reviewed_by',
+						'type'              => 'user',
+						'instructions'      => '',
+						'required'          => 0,
+						'conditional_logic' => 0,
+						'wrapper'           => [
+							'width' => '',
+							'class' => '',
+							'id'    => '',
+						],
+						'role'              => '',
+						'allow_null'        => 0,
+						'multiple'          => 1,
+						'return_format'     => 'array',
+					],
+					[
+						'key'               => 'field_60742d1357762',
+						'label'             => __( 'Reviewed at', 'iis' ),
+						'name'              => 'reviewed_at',
+						'type'              => 'date_time_picker',
+						'instructions'      => '',
+						'required'          => 0,
+						'conditional_logic' => 0,
+						'wrapper'           => [
+							'width' => '',
+							'class' => '',
+							'id'    => '',
+						],
+						'display_format'    => 'Y-m-d H:i:s',
+						'return_format'     => 'Y-m-d H:i:s',
+						'first_day'         => 1,
+					],
+				],
+				'location'              => $location,
+				'menu_order'            => 0,
+				'position'              => 'side',
+				'style'                 => 'default',
+				'label_placement'       => 'top',
+				'instruction_placement' => 'label',
+				'hide_on_screen'        => '',
+				'active'                => true,
+				'description'           => '',
+			]
+		);
+	}
 }
