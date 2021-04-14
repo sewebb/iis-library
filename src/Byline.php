@@ -107,6 +107,7 @@ class Byline {
 	public static function render( $options = ['date', 'reviewed_by', 'updated_at'] ) {
 		$avatar = get_avatar( get_the_author_meta( 'ID' ), 64, 'https://static.iis.se/images/transparent-avatar.png', '', [ 'class' => imns( 'm-byline__portrait', false ) ] );
 		$updated_at = ( in_array( 'updated_at', $options, true ) ) ? get_post_meta( get_the_ID(), 'updated_at', true ) : null;
+		$reviewed_by = ( in_array( 'reviewed_by', $options, true ) ) ? get_field( 'reviewed_by' ) : null;
 
 		ob_start();
 		?>
@@ -125,6 +126,21 @@ class Byline {
 					<strong><?php _e( 'Updated at', 'iis' ); ?>:</strong> <?php echo wp_date( get_option( 'date_format' ), strtotime( $updated_at ) ); ?>
 				</li>
 				<?php endif; ?>
+				<?php
+
+				if ( $reviewed_by ) :
+					foreach ( $reviewed_by as $reviewer ) :
+						$name = $reviewer['user_firstname'] . ' ' . $reviewer['user_lastname'];
+
+						if ( ! empty( $reviewer['user_description'] ) ) {
+							$name .= ', ' . $reviewer['user_description'];
+						}
+
+				?>
+				<li class="<?php imns( 'm-byline__list__item' ); ?>">
+					<strong><?php _e( 'Reviewed by', 'iis' ); ?>:</strong> <?php echo esc_html( $name ); ?>
+				</li>
+				<?php endforeach; endif; ?>
 			</ul>
 		</div>
 		<?php
