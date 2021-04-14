@@ -113,17 +113,17 @@ class Byline {
 		?>
 		<div class="<?php imns( 'm-byline' ); ?> u-m-b-4">
 			<?php echo $avatar; ?>
-			<span class="<?php imns( 'a-meta' ); ?>"><span class="small"><?php _e( 'Author', 'iis' ); ?></span></span>
-			<a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ) ); ?>" class="<?php imns( 'm-byline__link' ); ?>" title="<?php esc_attr_e( 'View all articles by author', 'iis' ); ?>"><?php the_author_meta( 'display_name' ); ?></a>
+			<span class="<?php imns( 'a-meta' ); ?>"><span class="small"><?php _e( 'Author', 'iis-library' ); ?></span></span>
+			<a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ) ); ?>" class="<?php imns( 'm-byline__link' ); ?>" title="<?php esc_attr_e( 'View all articles by author', 'iis-library' ); ?>"><?php the_author_meta( 'display_name' ); ?></a>
 			<ul class="<?php imns( 'm-byline__list' ); ?>">
 				<?php if ( in_array( 'date', $options, true ) ): ?>
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
-					<strong><?php _e( 'Published:', 'iis' ); ?></strong> <?php the_date(); ?>
+					<strong><?php _e( 'Published:', 'iis-library' ); ?></strong> <?php the_date(); ?>
 				</li>
 				<?php endif; ?>
 				<?php if ( $updated_at ) : ?>
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
-					<strong><?php _e( 'Updated at', 'iis' ); ?>:</strong> <?php echo wp_date( get_option( 'date_format' ), strtotime( $updated_at ) ); ?>
+					<strong><?php _e( 'Updated at', 'iis-library' ); ?>:</strong> <?php echo wp_date( get_option( 'date_format' ), strtotime( $updated_at ) ); ?>
 				</li>
 				<?php endif; ?>
 				<?php
@@ -138,7 +138,7 @@ class Byline {
 
 				?>
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
-					<strong><?php _e( 'Reviewed by', 'iis' ); ?>:</strong> <?php echo esc_html( $name ); ?>
+					<strong><?php _e( 'Reviewed by', 'iis-library' ); ?>:</strong> <?php echo esc_html( $name ); ?>
 				</li>
 				<?php endforeach; endif; ?>
 			</ul>

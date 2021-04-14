@@ -26,6 +26,8 @@ class Theme {
 	 * @return void
 	 */
 	public static function theme_setup() {
+		load_theme_textdomain( 'iis-library', __DIR__ . '/languages' );
+
 		add_theme_support( 'automatic-feed-links' );
 		add_theme_support( 'title-tag' );
 		add_theme_support( 'post-thumbnails' );
