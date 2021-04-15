@@ -2,17 +2,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-15T11:45:16+00:00\n"
+"PO-Revision-Date: 2021-04-15 13:45+0200\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-14T09:05:18+00:00\n"
-"PO-Revision-Date: 2021-04-14 13:56+0200\n"
 "X-Generator: Poedit 2.4.2\n"
 "X-Domain: iis-library\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: sv_SE\n"
+
+#: src/Byline.php:50
+msgid "Updated and reviewed"
+msgstr "Uppdaterad och granskad"
+
+#: src/Byline.php:54 src/Byline.php:141
+msgid "Reviewed by"
+msgstr "Granskad av"
+
+#: src/Byline.php:72 src/Byline.php:126
+msgid "Updated at"
+msgstr "Uppdaterad"
 
 #: src/Byline.php:116
 msgid "Author"
@@ -20,16 +32,11 @@ msgstr "Skribent"
 
 #: src/Byline.php:117
 msgid "View all articles by author"
-msgstr ""
+msgstr "Visa alla artiklar av skribent"
 
 #: src/Byline.php:121
 msgid "Published:"
 msgstr "Publicerad:"
 
-#: src/Byline.php:126
-msgid "Updated at"
-msgstr "Uppdaterad"
-
-#: src/Byline.php:141
-msgid "Reviewed by"
-msgstr "Granskad av"
+#~ msgid "Review"
+#~ msgstr "Granska"

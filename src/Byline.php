@@ -47,11 +47,11 @@ class Byline {
 		acf_add_local_field_group(
 			[
 				'key'                   => 'group_60742c1d479af',
-				'title'                 => __( 'Review', 'iis' ),
+				'title'                 => __( 'Updated and reviewed', 'iis-library' ),
 				'fields'                => [
 					[
 						'key'               => 'field_60742c276dd20',
-						'label'             => __( 'Reviewed by', 'iis' ),
+						'label'             => __( 'Reviewed by', 'iis-library' ),
 						'name'              => 'reviewed_by',
 						'type'              => 'user',
 						'instructions'      => '',
@@ -69,7 +69,7 @@ class Byline {
 					],
 					[
 						'key'               => 'field_60742d1357762',
-						'label'             => __( 'Updated at', 'iis' ),
+						'label'             => __( 'Updated at', 'iis-library' ),
 						'name'              => 'updated_at',
 						'type'              => 'date_time_picker',
 						'instructions'      => '',
