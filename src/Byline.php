@@ -21,80 +21,85 @@ class Byline {
 			return;
 		}
 
-		if ( $location ) {
-			$location = array_map(
-				function ( $post_type ) {
-					return [
-						'param'    => 'post_type',
-						'operator' => '==',
-						'value'    => $post_type,
+		add_action(
+			'acf/init',
+			function () use ($location) {
+				if ( $location ) {
+					$location = array_map(
+						function ( $post_type ) {
+							return [
+								'param'    => 'post_type',
+								'operator' => '==',
+								'value'    => $post_type,
+							];
+						},
+						$location
+					);
+				} else {
+					$location = [
+						[
+							'param'    => 'post_type',
+							'operator' => '!=',
+							'value'    => 'allow_all',
+						],
 					];
-				},
-				$location
-			);
-		} else {
-			$location = [
-				[
-					'param'    => 'post_type',
-					'operator' => '!=',
-					'value'    => 'allow_all',
-				],
-			];
-		}
+				}
 
-		$location = [ $location ];
+				$location = [ $location ];
 
-		acf_add_local_field_group(
-			[
-				'key'                   => 'group_60742c1d479af',
-				'title'                 => __( 'Updated and reviewed', 'iis-library' ),
-				'fields'                => [
+				acf_add_local_field_group(
 					[
-						'key'               => 'field_60742c276dd20',
-						'label'             => __( 'Reviewed by', 'iis-library' ),
-						'name'              => 'reviewed_by',
-						'type'              => 'user',
-						'instructions'      => '',
-						'required'          => 0,
-						'conditional_logic' => 0,
-						'wrapper'           => [
-							'width' => '',
-							'class' => '',
-							'id'    => '',
+						'key'                   => 'group_60742c1d479af',
+						'title'                 => __( 'Updated and reviewed', 'iis-library' ),
+						'fields'                => [
+							[
+								'key'               => 'field_60742c276dd20',
+								'label'             => __( 'Reviewed by', 'iis-library' ),
+								'name'              => 'reviewed_by',
+								'type'              => 'user',
+								'instructions'      => '',
+								'required'          => 0,
+								'conditional_logic' => 0,
+								'wrapper'           => [
+									'width' => '',
+									'class' => '',
+									'id'    => '',
+								],
+								'role'              => '',
+								'allow_null'        => 0,
+								'multiple'          => 1,
+								'return_format'     => 'array',
+							],
+							[
+								'key'               => 'field_60742d1357762',
+								'label'             => __( 'Updated at', 'iis-library' ),
+								'name'              => 'updated_at',
+								'type'              => 'date_time_picker',
+								'instructions'      => '',
+								'required'          => 0,
+								'conditional_logic' => 0,
+								'wrapper'           => [
+									'width' => '',
+									'class' => '',
+									'id'    => '',
+								],
+								'display_format'    => 'Y-m-d H:i:s',
+								'return_format'     => 'Y-m-d H:i:s',
+								'first_day'         => 1,
+							],
 						],
-						'role'              => '',
-						'allow_null'        => 0,
-						'multiple'          => 1,
-						'return_format'     => 'array',
-					],
-					[
-						'key'               => 'field_60742d1357762',
-						'label'             => __( 'Updated at', 'iis-library' ),
-						'name'              => 'updated_at',
-						'type'              => 'date_time_picker',
-						'instructions'      => '',
-						'required'          => 0,
-						'conditional_logic' => 0,
-						'wrapper'           => [
-							'width' => '',
-							'class' => '',
-							'id'    => '',
-						],
-						'display_format'    => 'Y-m-d H:i:s',
-						'return_format'     => 'Y-m-d H:i:s',
-						'first_day'         => 1,
-					],
-				],
-				'location'              => $location,
-				'menu_order'            => 0,
-				'position'              => 'side',
-				'style'                 => 'default',
-				'label_placement'       => 'top',
-				'instruction_placement' => 'label',
-				'hide_on_screen'        => '',
-				'active'                => true,
-				'description'           => '',
-			]
+						'location'              => $location,
+						'menu_order'            => 0,
+						'position'              => 'side',
+						'style'                 => 'default',
+						'label_placement'       => 'top',
+						'instruction_placement' => 'label',
+						'hide_on_screen'        => '',
+						'active'                => true,
+						'description'           => '',
+					]
+				);
+			}
 		);
 	}
 
