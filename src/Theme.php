@@ -129,8 +129,10 @@ class Theme {
 	 * @return void
 	 */
 	public static function env_banner() {
-		if ( defined( 'WP_ENV' ) && in_array( WP_ENV, [ 'stage', 'dev' ], true ) ) {
-			$banner_text = ( 'stage' === WP_ENV ) ? 'STAGE' : 'DEV'; ?>
+		$env = wp_get_environment_type();
+
+		if ( in_array( $env, [ 'local', 'development', 'staging' ], true ) ) {
+			$banner_text = ( 'staging' === $env ) ? 'STAGE' : 'DEV'; ?>
 
 			<div class="ribbon js-ribbon">
 				<?php echo $banner_text; ?>
@@ -157,7 +159,6 @@ class Theme {
 					transform-origin: bottom right;
 					background-color: #e0bff5;
 					font-family: "HK Grotesk Semibold", sans-serif;
-					font-family: sans-serif;
 					font-size: 12px;
 					text-align: center;
 					text-transform: uppercase;

@@ -35,7 +35,7 @@ if ( ! function_exists( 'iis_remember' ) ) {
 	 * @return mixed|null
 	 */
 	function iis_remember( $cache_key, $cache_time, $callback ) {
-		$content = ( ! defined( 'WP_ENV' ) || 'production' !== WP_ENV ) ? false : get_transient( $cache_key );
+		$content = ( 'production' !== wp_get_environment_type() ) ? false : get_transient( $cache_key );
 
 		if ( false === $content ) {
 			$content = $callback();
@@ -238,7 +238,7 @@ if ( ! function_exists( 'imns' ) ) {
 	 * @return void|string
 	 */
 	function imns( $class, $echo = true ) {
-		$namespace = apply_filters( 'iis_blocks_namespace', env( 'IIS_NAMESPACE', 'iis-' ) );
+		$namespace = apply_filters( 'iis_blocks_namespace', getenv( 'IIS_NAMESPACE', 'iis-' ) );
 		$classes   = array_map(
 			function ( $single_class ) use ( $namespace ) {
 				if ( strpos( $single_class, '!' ) === 0 ) {
