@@ -186,10 +186,11 @@ if ( ! function_exists( 'iis_get_hero' ) ) {
 	/**
 	 * Get the content hero
 	 *
-	 * @return mixed
+	 * @param int|null $post_id
+	 * @return array|null
 	 */
-	function iis_get_hero() {
-		$content = get_the_content();
+	function iis_get_hero( int $post_id = null ): ?array {
+		$content = get_the_content( null, false, $post_id );
 
 		if ( has_blocks( $content ) ) {
 			$blocks = parse_blocks( $content );
@@ -207,10 +208,11 @@ if ( ! function_exists( 'iis_has_hero' ) ) {
 	/**
 	 * Checks if content starts with a hero
 	 *
+	 * @param int|null $post_id
 	 * @return bool
 	 */
-	function iis_has_hero() {
-		$hero = iis_get_hero();
+	function iis_has_hero( int $post_id = null ): bool {
+		$hero = iis_get_hero( $post_id );
 
 		return null !== $hero;
 	}
@@ -220,10 +222,11 @@ if ( ! function_exists( 'iis_has_full_hero' ) ) {
 	/**
 	 * Checks if content starts with a full-width hero
 	 *
+	 * @param int|null $post_id
 	 * @return bool
 	 */
-	function iis_has_full_hero() {
-		$hero = iis_get_hero();
+	function iis_has_full_hero( int $post_id = null ): bool {
+		$hero = iis_get_hero( $post_id );
 
 		return $hero && 'full' === ( $hero['attrs']['align'] ?? 'wide' );
 	}
