@@ -269,14 +269,11 @@ if ( ! function_exists( 'iis_uses_styleguide' ) ) {
 	/**
 	 * Check if theme is using the styleguide
 	 *
+	 * @deprecated Will be removed in v5.0
 	 * @return bool
 	 */
-	function iis_uses_styleguide() {
-		if ( ! defined( 'PROJECT_ROOT' ) ) {
-			return false;
-		}
-
-		return file_exists( PROJECT_ROOT . '/node_modules/@internetstiftelsen/styleguide' );
+	function iis_uses_styleguide(): bool {
+		return true;
 	}
 }
 
@@ -286,16 +283,18 @@ if ( ! function_exists( 'iis_styleguide_sprite' ) ) {
 	 *
 	 * @return void
 	 */
-	function iis_styleguide_sprite() {
+	function iis_styleguide_sprite(): void {
 		echo iis_remember(
 			'iis_styleguide_sprite',
 			0,
 			function () {
-				if ( iis_uses_styleguide() ) {
-					return file_get_contents( PROJECT_ROOT . '/node_modules/@internetstiftelsen/styleguide/src/atoms/icon/sprite.svg' );
+				$response = wp_remote_get( 'https://static.internetstiftelsen.se/icons/sprite.svg' );
+
+				if ( is_wp_error( $response ) ) {
+					return '';
 				}
 
-				return null;
+				return wp_remote_retrieve_body( $response );
 			}
 		);
 	}
