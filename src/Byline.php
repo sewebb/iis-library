@@ -110,7 +110,7 @@ class Byline {
 	 * @return string
 	 */
 	public static function render( $options = ['date', 'reviewed_by', 'updated_at'] ): string {
-		$avatar = get_avatar( get_the_author_meta( 'ID' ), 64, 'https://static.iis.se/images/transparent-avatar.png', '', [ 'class' => imns( 'm-byline__portrait', false ) ] );
+		$avatar = get_avatar( get_the_author_meta( 'ID' ), 64, 'https://static.internetstiftelsen.se/images/transparent-avatar.png', '', [ 'class' => imns( 'm-byline__portrait', false ) ] );
 		$updated_at = ( in_array( 'updated_at', $options, true ) ) ? get_post_meta( get_the_ID(), 'updated_at', true ) : null;
 		$reviewed_by = ( in_array( 'reviewed_by', $options, true ) ) ? get_field( 'reviewed_by' ) : null;
 
