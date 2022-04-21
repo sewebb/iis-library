@@ -15,6 +15,13 @@ class Theme {
 		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
 		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
+		add_filter(
+			'site_status_tests',
+			function( $tests ) {
+				unset( $tests['async']['background_updates'] );
+				return $tests;
+			}
+		);
 
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
