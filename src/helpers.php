@@ -195,7 +195,7 @@ if ( ! function_exists( 'iis_get_hero' ) ) {
 		if ( has_blocks( $content ) ) {
 			$blocks = parse_blocks( $content );
 
-			if ( 'iis/hero' === $blocks[0]['blockName'] ) {
+			if ( in_array( $blocks[0]['blockName'], ['iis/hero', 'iis/glider-hero'], true ) ) {
 				return $blocks[0];
 			}
 		}
@@ -228,7 +228,7 @@ if ( ! function_exists( 'iis_has_full_hero' ) ) {
 	function iis_has_full_hero( int $post_id = null ): bool {
 		$hero = iis_get_hero( $post_id );
 
-		return $hero && 'full' === ( $hero['attrs']['align'] ?? 'wide' );
+		return $hero && ( 'iis/glider-hero' === $hero['blockName'] || 'full' === ( $hero['attrs']['align'] ?? 'wide' ) );
 	}
 }
 
