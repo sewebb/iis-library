@@ -123,6 +123,11 @@ class Theme {
 					'slug'  => 'sandstone-light',
 					'color' => '#fcccb1',
 				],
+				[
+					'name'  => 'Granit',
+					'slug'  => 'granit',
+					'color' => '#8E9297',
+				],
 			]
 		);
 
