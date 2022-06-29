@@ -128,6 +128,11 @@ class Theme {
 					'slug'  => 'granit',
 					'color' => '#8E9297',
 				],
+				[
+					'name'  => 'Snow',
+					'slug'  => 'snow',
+					'color' => '#ffffff',
+				],
 			]
 		);
 
