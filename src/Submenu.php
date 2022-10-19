@@ -43,6 +43,7 @@ class Submenu {
 		foreach ( $all_children as $child ) {
 			$hide = get_post_meta( $child->ID, 'display_in_submenus', true );
 
+			$children_parent[ $child->ID ]            = $child->post_parent;
 			if ( $hide === '0' ) {
 				continue;
 			}
@@ -54,7 +55,6 @@ class Submenu {
 			}
 
 			$parent_children[ $child->post_parent ][] = $child->ID;
-			$children_parent[ $child->ID ]            = $child->post_parent;
 		}
 
 		if ( $top_level->ID === $post->ID ) {
