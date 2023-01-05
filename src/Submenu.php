@@ -8,7 +8,7 @@ use WP_Post;
  * Helper methods for submenu functionality
  */
 class Submenu {
-	private static function mapChildren( $id, $parent_children, $posts_by_id ) {
+	private static function mapChildren( $id, $parent_children, $posts_by_id ): array {
 		$children = $parent_children[ $id ] ?? [];
 
 		if ( ! $children || ! count( $children ) ) {
@@ -31,7 +31,7 @@ class Submenu {
 		);
 	}
 
-	public static function items( $submenu_for = null ) {
+	public static function data( WP_Post|null $submenu_for = null ): object {
 		// TODO: Refactor
 		global $post;
 
@@ -96,22 +96,17 @@ class Submenu {
 		];
 	}
 
-	/**
-	 * @param string|bool $align
-	 * @param null|WP_Post $submenu_for
-	 * @return string
-	 */
-	public static function render( $align = 'right', $submenu_for = null, $prepend_items = [], $append_items = [] ): string {
-		$items = self::items( $submenu_for );
+	public static function render( string $align = 'right', WP_Post|null $submenu_for = null, array $prepend_items = [], array $append_items = [] ): string {
+		$data = self::data( $submenu_for );
 		$wrapper_class = '';
 
 		if ( $align ) {
 			$wrapper_class .= 'u-m-t-2 align' . $align;
 		}
 
-		$items->items = array_merge(
+		$data->items = array_merge(
 			json_decode( json_encode( $prepend_items ) ),
-			$items->items,
+			$data->items,
 			json_decode( json_encode( $append_items ) ),
 		);
 
@@ -120,22 +115,22 @@ class Submenu {
 		<nav class="rs_skip <?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
-					<?php if ( $items->url ) : ?>
-						<a href="<?php echo esc_url( $items->url ); ?>" class="<?php imns( 'm-submenu__title__link' ); ?>">
-							<span><?php echo apply_filters( 'the_title', $items->title ); ?></span>
+					<?php if ( $data->url ) : ?>
+						<a href="<?php echo esc_url( $data->url ); ?>" class="<?php imns( 'm-submenu__title__link' ); ?>">
+							<span><?php echo apply_filters( 'the_title', $data->title ); ?></span>
 							<svg class="icon">
 								<use xlink:href="#icon-arrow-variant"></use>
 							</svg>
 						</a>
 					<?php else : ?>
 						<span class="<?php imns( 'm-submenu__title__link !u-pointer-events-none' ); ?>">
-							<span><?php echo apply_filters( 'the_title', $items->title ); ?></span>
+							<span><?php echo apply_filters( 'the_title', $data->title ); ?></span>
 						</span>
 					<?php endif; ?>
 				</dt>
 				<?php
 
-				foreach ( $items->items as $child ) :
+				foreach ( $data->items as $child ) :
 					$link_classes = 'm-submenu__item__link';
 					$hidden = true;
 
