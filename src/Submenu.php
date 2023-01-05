@@ -8,12 +8,30 @@ use WP_Post;
  * Helper methods for submenu functionality
  */
 class Submenu {
-	/**
-	 * @param string|bool $align
-	 * @param null|WP_Post $submenu_for
-	 * @return string
-	 */
-	public static function render( $align = 'right', $submenu_for = null ): string {
+	private static function mapChildren( $id, $parent_children, $posts_by_id ) {
+		$children = $parent_children[ $id ] ?? [];
+
+		if ( ! $children || ! count( $children ) ) {
+			return [];
+		}
+
+		return array_map(
+			function( $child_id ) use ( $parent_children, $posts_by_id ) {
+				$child = $posts_by_id[ $child_id ];
+
+				return (object) [
+					'id' => $child->ID,
+					'title' => $child->post_title,
+					'url' => get_permalink( $child ),
+					'is_current' => $child->ID === get_the_ID(),
+					'items' => self::mapChildren( $child->ID, $parent_children, $posts_by_id ),
+				];
+			},
+			$children
+		);
+	}
+
+	public static function items( $submenu_for = null ) {
 		// TODO: Refactor
 		global $post;
 
@@ -32,18 +50,14 @@ class Submenu {
 			]
 		);
 
-		if ( ! $all_children || ! count( $all_children ) ) {
-			return '';
-		}
-
 		$parent_children = [];
 		$children_parent = [];
 		$posts_by_id     = [];
 
 		foreach ( $all_children as $child ) {
 			$hide = get_post_meta( $child->ID, 'display_in_submenus', true );
+			$children_parent[ $child->ID ] = $child->post_parent;
 
-			$children_parent[ $child->ID ]            = $child->post_parent;
 			if ( $hide === '0' ) {
 				continue;
 			}
@@ -75,91 +89,107 @@ class Submenu {
 			$top_level = $posts_by_id[ $top_level_id ];
 		}
 
+		return (object) [
+			'title' => $top_level->post_title,
+			'url' => ( $post->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
+			'items' => self::mapChildren( $top_level->ID, $parent_children, $posts_by_id ),
+		];
+	}
+
+	/**
+	 * @param string|bool $align
+	 * @param null|WP_Post $submenu_for
+	 * @return string
+	 */
+	public static function render( $align = 'right', $submenu_for = null, $prepend_items = [], $append_items = [] ): string {
+		$items = self::items( $submenu_for );
 		$wrapper_class = '';
 
 		if ( $align ) {
 			$wrapper_class .= 'u-m-t-2 align' . $align;
 		}
 
+		$items->items = array_merge(
+			json_decode( json_encode( $prepend_items ) ),
+			$items->items,
+			json_decode( json_encode( $append_items ) ),
+		);
+
 		ob_start();
 		?>
 		<nav class="rs_skip <?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
-					<?php if ( $post->ID !== $top_level->ID ) : ?>
-						<a href="<?php echo get_permalink( $top_level ); ?>" class="<?php imns( 'm-submenu__title__link' ); ?>">
-							<span><?php echo apply_filters( 'the_title', $top_level->post_title ); ?></span>
+					<?php if ( $items->url ) : ?>
+						<a href="<?php echo esc_url( $items->url ); ?>" class="<?php imns( 'm-submenu__title__link' ); ?>">
+							<span><?php echo apply_filters( 'the_title', $items->title ); ?></span>
 							<svg class="icon">
 								<use xlink:href="#icon-arrow-variant"></use>
 							</svg>
 						</a>
 					<?php else : ?>
 						<span class="<?php imns( 'm-submenu__title__link !u-pointer-events-none' ); ?>">
-							<span><?php echo apply_filters( 'the_title', $top_level->post_title ); ?></span>
+							<span><?php echo apply_filters( 'the_title', $items->title ); ?></span>
 						</span>
 					<?php endif; ?>
 				</dt>
 				<?php
 
-				$children = $parent_children[ $top_level->ID ];
-
-				foreach ( $children as $child ) :
-					$child        = $posts_by_id[ $child ];
+				foreach ( $items->items as $child ) :
 					$link_classes = 'm-submenu__item__link';
 					$hidden = true;
 
-					if ( isset( $parent_children[ $child->ID ] ) ) {
+					if ( count( $child->items ?? [] ) ) {
 						$link_classes .= ' m-submenu__item__link--has-sublevel';
 
-						foreach ( $parent_children[ $child->ID ] as $subchild ) {
-							if ( $subchild === $submenu_for->ID ) {
+						foreach ( $child->items as $subchild ) {
+							if ( $subchild->is_current ?? false ) {
 								$hidden = false;
 								break;
 							}
 						}
 					}
 
-					if ( $child->ID === $post->ID ) {
-						$link_classes .= ' !is-current';
+					if ( $child->is_current ?? false ) {
+						$hidden = false;
 					}
 
-					if ( $child->ID === $submenu_for->ID ) {
-						$hidden = false;
+					if ( $child->is_current ?? false ) {
+						$link_classes .= ' !is-current';
 					}
 
 					?>
 					<dd class="<?php imns( 'm-submenu__item' ); ?>">
-						<?php if ( isset( $parent_children[ $child->ID ] ) ) : ?>
+						<?php if ( count( $child->items ?? [] ) ) : ?>
 							<div class="<?php imns( 'm-submenu__item__sublevel' ); ?>">
-								<a href="<?php echo get_permalink( $child->ID ); ?>" class="<?php imns( $link_classes ); ?>">
-									<span><?php echo apply_filters( 'the_title', $child->post_title ); ?></span>
+								<a href="<?php echo esc_url( $child->url ); ?>" class="<?php imns( $link_classes ); ?>">
+									<span><?php echo apply_filters( 'the_title', $child->title ); ?></span>
 								</a>
-								<button type="button" class="<?php imns( 'm-submenu__item__toggle-button' ); ?>" data-a11y-toggle="sublvl<?php echo $child->ID; ?>" aria-controls="sublvl<?php echo $child->ID; ?>">
+								<button type="button" class="<?php imns( 'm-submenu__item__toggle-button' ); ?>" data-a11y-toggle="sublvl<?php echo $child->id; ?>" aria-controls="sublvl<?php echo $child->id; ?>">
 									<span class="u-visuallyhidden">Öppna/stäng</span>
 								</button>
 							</div>
-							<ul class="<?php imns( 'm-submenu__sublevel' ); ?>" <?php echo ( $hidden ) ? '' : 'data-a11y-toggle-open'; ?> id="sublvl<?php echo $child->ID; ?>" data-focus-trap="false">
+							<ul class="<?php imns( 'm-submenu__sublevel' ); ?>" <?php echo ( $hidden ) ? '' : 'data-a11y-toggle-open'; ?> id="sublvl<?php echo $child->id; ?>" data-focus-trap="false">
 								<?php
 
-								foreach ( $parent_children[ $child->ID ] as $subchild ) :
-									$subchild         = $posts_by_id[ $subchild ];
+								foreach ( $child->items as $subchild ) :
 									$sub_item_classes = 'm-submenu__item__link m-submenu__sublevel__item__link';
 
-									if ( $subchild->ID === $post->ID ) {
+									if ( $subchild->is_current ?? false ) {
 										$sub_item_classes .= ' !is-current';
 									}
 
 									?>
 									<li class="<?php imns( 'm-submenu__sublevel__item' ); ?>">
-										<a href="<?php echo get_permalink( $subchild ); ?>" class="<?php imns( $sub_item_classes ); ?>">
-											<span><?php echo apply_filters( 'the_title', $subchild->post_title ); ?></span>
+										<a href="<?php echo esc_url( $subchild->url ); ?>" class="<?php imns( $sub_item_classes ); ?>">
+											<span><?php echo apply_filters( 'the_title', $subchild->title ); ?></span>
 										</a>
 									</li>
 								<?php endforeach; ?>
 							</ul>
 						<?php else : ?>
-							<a href="<?php echo get_permalink( $child->ID ); ?>" class="<?php imns( $link_classes ); ?>">
-								<span><?php echo apply_filters( 'the_title', $child->post_title ); ?></span>
+							<a href="<?php echo esc_url( $child->url ); ?>" class="<?php imns( $link_classes ); ?>">
+								<span><?php echo apply_filters( 'the_title', $child->title ); ?></span>
 							</a>
 						<?php endif; ?>
 					</dd>
