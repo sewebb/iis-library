@@ -110,6 +110,10 @@ class Submenu {
 			json_decode( json_encode( $append_items ) ),
 		);
 
+		if ( ! count( $data->items ) ) {
+			return '';
+		}
+
 		ob_start();
 		?>
 		<nav class="rs_skip <?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
