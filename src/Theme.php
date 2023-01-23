@@ -15,6 +15,7 @@ class Theme {
 		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
 		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
+		add_action( 'http_api_curl', [ Theme::class, 'force_curl_ipv4' ] );
 		add_filter(
 			'site_status_tests',
 			function( $tests ) {
@@ -256,5 +257,9 @@ class Theme {
 		}
 
 		return $content;
+	}
+
+	public static function force_curl_ipv4( $curl_handle ) {
+		curl_setopt( $curl_handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
 	}
 }
