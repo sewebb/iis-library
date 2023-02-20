@@ -123,7 +123,7 @@ class Byline {
 			<ul class="<?php imns( 'm-byline__list' ); ?>">
 				<?php if ( in_array( 'date', $options, true ) ): ?>
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
-					<strong><?php _e( 'Published:', 'iis-library' ); ?></strong> <?php the_date(); ?>
+					<strong><?php _e( 'Published:', 'iis-library' ); ?></strong> <?php echo get_the_date(); ?>
 				</li>
 				<?php endif; ?>
 				<?php if ( $updated_at ) : ?>
