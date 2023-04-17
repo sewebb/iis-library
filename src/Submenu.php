@@ -54,21 +54,23 @@ class Submenu {
 		$children_parent = [];
 		$posts_by_id     = [];
 
-		foreach ( $all_children as $child ) {
-			$hide = get_post_meta( $child->ID, 'display_in_submenus', true );
-			$children_parent[ $child->ID ] = $child->post_parent;
+		if ( is_array( $all_children ) ) {
+			foreach ( $all_children as $child ) {
+				$hide                          = get_post_meta( $child->ID, 'display_in_submenus', true );
+				$children_parent[ $child->ID ] = $child->post_parent;
 
-			if ( $hide === '0' ) {
-				continue;
+				if ( $hide === '0' ) {
+					continue;
+				}
+
+				$posts_by_id[ $child->ID ] = $child;
+
+				if ( ! isset( $parent_children[ $child->post_parent ] ) ) {
+					$parent_children[ $child->post_parent ] = [];
+				}
+
+				$parent_children[ $child->post_parent ][] = $child->ID;
 			}
-
-			$posts_by_id[ $child->ID ] = $child;
-
-			if ( ! isset( $parent_children[ $child->post_parent ] ) ) {
-				$parent_children[ $child->post_parent ] = [];
-			}
-
-			$parent_children[ $child->post_parent ][] = $child->ID;
 		}
 
 		if ( $top_level->ID === $post->ID ) {
