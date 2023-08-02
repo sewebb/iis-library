@@ -73,7 +73,7 @@ class Submenu {
 			}
 		}
 
-		if ( $top_level->ID === $post->ID ) {
+		if ( $top_level->ID === $submenu_for->ID ) {
 			// Current post is the top level. Display two levels down
 			$top_level_id = $submenu_for->ID;
 		} elseif ( ! isset( $parent_children[$submenu_for->ID] ) ) {
@@ -93,7 +93,7 @@ class Submenu {
 
 		return (object) [
 			'title' => $top_level->post_title,
-			'url' => ( $post->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
+			'url' => ( $submenu_for->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
 			'items' => self::mapChildren( $top_level->ID, $parent_children, $posts_by_id ),
 		];
 	}
