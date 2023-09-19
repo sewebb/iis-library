@@ -23,6 +23,8 @@ class Theme {
 				return $tests;
 			}
 		);
+		// Add other file types to allowed mime types
+		add_filter( 'mime_types', [ Theme::class, 'add_to_upload_mimes' ] );
 
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
@@ -261,5 +263,16 @@ class Theme {
 
 	public static function force_curl_ipv4( $curl_handle ) {
 		curl_setopt( $curl_handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+	}
+
+	/**
+	 * Add ics to allowed mime types
+	 *
+	 * @param array $mimes Original set of allowed mime types
+	 * @return array          Modified set of mime types, including ics
+	 */
+	public static function add_to_upload_mimes( $mimes ): array {
+		$mimes['ics'] = 'text/calendar';
+		return $mimes;
 	}
 }
