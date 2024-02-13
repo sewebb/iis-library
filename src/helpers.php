@@ -6,11 +6,16 @@ if ( ! function_exists( 'iis_config' ) ) {
 	 *
 	 * @param string $keys         the key to get the value for. Use dot notation for going deeper.
 	 * @param mixed|null $fallback fallback if value is missing
+	 * @param string|null $directory The directory where the config file is located.
 	 * @return mixed     The value (if found) for the given key.
 	 */
-	function iis_config( string $keys, $fallback = null ) {
+	function iis_config( string $keys, $fallback = null, ?string $directory = null) {
+		if ( ! $directory ) {
+			$directory = get_stylesheet_directory();
+		}
+
 		$keys  = explode( '.', $keys );
-		$value = include get_template_directory() . '/config.php';
+		$value = include $directory . '/config.php';
 
 		foreach ( $keys as $key ) {
 			if ( isset( $value[ $key ] ) ) {
@@ -138,13 +143,15 @@ if ( ! function_exists( 'iis_mix_manifest' ) ) {
 	 *
 	 * @return array|null
 	 */
-	function iis_mix_manifest() {
+	function iis_mix_manifest( ?string $directory = null ): ?array {
+		if ( ! $directory ) {
+			$directory = get_stylesheet_directory();
+		}
+
 		$mix_manifest_content = iis_remember(
 			'mix_manifest_transient',
 			1 * DAY_IN_SECONDS,
-			function () {
-				return file_get_contents( get_template_directory() . '/mix-manifest.json' );
-			}
+			fn () => file_get_contents( $directory . '/mix-manifest.json' ),
 		);
 
 		try {
@@ -163,10 +170,11 @@ if ( ! function_exists( 'iis_mix' ) ) {
 	 *
 	 * @param string $path Path tp mix manifest.
 	 * @param string $base Base path to scripts.
+	 * @param string|null $manifest_directory The directory where the manifest is located.
 	 * @return string|null
 	 */
-	function iis_mix( $path, $base = '/assets/' ) {
-		$manifest = iis_mix_manifest();
+	function iis_mix( $path, $base = '/assets/', ?string $manifest_directory = null): ?string {
+		$manifest = iis_mix_manifest( $manifest_directory );
 
 		if ( ! $manifest ) {
 			return null;
