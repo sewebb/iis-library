@@ -6,11 +6,16 @@ if ( ! function_exists( 'iis_config' ) ) {
 	 *
 	 * @param string $keys         the key to get the value for. Use dot notation for going deeper.
 	 * @param mixed|null $fallback fallback if value is missing
+	 * @param string|null $directory The directory where the config file is located.
 	 * @return mixed     The value (if found) for the given key.
 	 */
-	function iis_config( string $keys, $fallback = null ) {
+	function iis_config( string $keys, $fallback = null, ?string $directory = null) {
+		if ( ! $directory ) {
+			$directory = get_stylesheet_directory();
+		}
+
 		$keys  = explode( '.', $keys );
-		$value = include get_template_directory() . '/config.php';
+		$value = include $directory . '/config.php';
 
 		foreach ( $keys as $key ) {
 			if ( isset( $value[ $key ] ) ) {
@@ -138,13 +143,15 @@ if ( ! function_exists( 'iis_mix_manifest' ) ) {
 	 *
 	 * @return array|null
 	 */
-	function iis_mix_manifest() {
+	function iis_mix_manifest( ?string $directory = null ): ?array {
+		if ( ! $directory ) {
+			$directory = get_stylesheet_directory();
+		}
+
 		$mix_manifest_content = iis_remember(
 			'mix_manifest_transient',
 			1 * DAY_IN_SECONDS,
-			function () {
-				return file_get_contents( get_template_directory() . '/mix-manifest.json' );
-			}
+			fn () => file_get_contents( $directory . '/mix-manifest.json' ),
 		);
 
 		try {
@@ -163,10 +170,11 @@ if ( ! function_exists( 'iis_mix' ) ) {
 	 *
 	 * @param string $path Path tp mix manifest.
 	 * @param string $base Base path to scripts.
+	 * @param string|null $manifest_directory The directory where the manifest is located.
 	 * @return string|null
 	 */
-	function iis_mix( $path, $base = '/assets/' ) {
-		$manifest = iis_mix_manifest();
+	function iis_mix( $path, $base = '/assets/', ?string $manifest_directory = null): ?string {
+		$manifest = iis_mix_manifest( $manifest_directory );
 
 		if ( ! $manifest ) {
 			return null;
@@ -317,25 +325,18 @@ if ( ! function_exists( 'iis_word_count' ) ) {
 	}
 }
 
-if ( ! function_exists( 'iis_get_post_reading_time' ) ) {
+if ( ! function_exists( 'iis_get_reading_time' ) ) {
 	/**
-	 * Get reading time for a post, in minutes.
+	 * Get reading time for a string, in minutes.
 	 * Uses the calculation from https://blog.medium.com/read-time-and-you-bc2048ab620c.
-	 *
-	 * @param WP_Post|object|int $post_id
-	 * @return float|false
 	 */
-	function iis_get_post_reading_time( $post_id ) {
-		// $reading_time_post = get_post($post_id);
-		// Get the content and apply content filter so Gutenberg blocks are parsed.
-		$content_html = get_the_content( null, false, $post_id );
-		$content_html = apply_filters( 'the_content', $content_html );
+	function iis_get_reading_time( string $html ): float {
 
 		// Get number of images in text.
-		if ( $content_html ) {
+		if ( $html ) {
 			$document = new DOMDocument();
 			libxml_use_internal_errors( true );
-			$document->loadHTML( $content_html );
+			$document->loadHTML( $html );
 			$images = $document->getElementsByTagName( 'img' );
 			libxml_clear_errors();
 			$images_count = count( $images );
@@ -345,7 +346,7 @@ if ( ! function_exists( 'iis_get_post_reading_time' ) ) {
 
 		$words_count  = 0;
 		$words_count += iis_word_count( get_the_title() );
-		$words_count += iis_word_count( $content_html );
+		$words_count += iis_word_count( $html );
 
 		$words_per_minute = 275;
 
@@ -357,10 +358,10 @@ if ( ! function_exists( 'iis_get_post_reading_time' ) ) {
 		$reading_time       += $images_reading_time;
 
 		// Check for grahps.
-		if ( $content_html ) {
+		if ( $html ) {
 			$document = new DOMDocument();
 			libxml_use_internal_errors( true );
-			$document->loadHTML( $content_html );
+			$document->loadHTML( $html );
 
 			$xpath  = new \DOMXpath( $document );
 			$graphs = $xpath->query( '//div[@class="wp-block-iis-graph"]' );
@@ -373,6 +374,23 @@ if ( ! function_exists( 'iis_get_post_reading_time' ) ) {
 		}
 
 		return ceil( $reading_time );
+	}
+}
+
+if ( ! function_exists( 'iis_get_post_reading_time' ) ) {
+	/**
+	 * Get reading time for a post, in minutes.
+	 * Uses the calculation from https://blog.medium.com/read-time-and-you-bc2048ab620c.
+	 *
+	 * @param WP_Post|object|int $post_id
+	 * @return float
+	 */
+	function iis_get_post_reading_time( $post_id ): float {
+		// Get the content and apply content filter so Gutenberg blocks are parsed.
+		$content_html = get_the_content( null, false, $post_id );
+		$content_html = apply_filters( 'the_content', $content_html );
+
+		return iis_get_reading_time( $content_html );
 	}
 }
 

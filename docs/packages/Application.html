@@ -221,9 +221,16 @@ an empty string.</dd>
 <dd>Count number of words in string.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_iis_get_reading_time">iis_get_reading_time()</a>
+    <span>
+                                &nbsp;: float    </span>
+</dt>
+<dd>Get reading time for a string, in minutes.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_iis_get_post_reading_time">iis_get_post_reading_time()</a>
     <span>
-                                &nbsp;: float|false    </span>
+                                &nbsp;: float    </span>
 </dt>
 <dd>Get reading time for a post, in minutes.</dd>
 
@@ -929,6 +936,47 @@ https://stackoverflow.com/questions/8290537/is-php-str-word-count-multibyte-safe
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_iis_get_reading_time">
+        iis_get_reading_time()
+        <a href="namespaces/default.html#function_iis_get_reading_time" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/helpers.php"><a href="files/src-helpers.html"><abbr title="src/helpers.php">helpers.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">325</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Get reading time for a string, in minutes.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                <span class="phpdocumentor-signature__name">iis_get_reading_time</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$html</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float</span></code>
+
+        <section class="phpdocumentor-description"><p>Uses the calculation from https://blog.medium.com/read-time-and-you-bc2048ab620c.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$html</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"></section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">float</span>
+            &mdash;
+        
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_iis_get_post_reading_time">
         iis_get_post_reading_time()
         <a href="namespaces/default.html#function_iis_get_post_reading_time" class="headerlink"><i class="fas fa-link"></i></a>
@@ -936,7 +984,7 @@ https://stackoverflow.com/questions/8290537/is-php-str-word-count-multibyte-safe
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/helpers.php"><a href="files/src-helpers.html"><abbr title="src/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">328</span>
+    <span class="phpdocumentor-element-found-in__line">380</span>
 
     </aside>
 
@@ -944,7 +992,7 @@ https://stackoverflow.com/questions/8290537/is-php-str-word-count-multibyte-safe
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                <span class="phpdocumentor-signature__name">iis_get_post_reading_time</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\WP_Post">WP_Post</abbr>|object|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$post_id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float|false</span></code>
+                <span class="phpdocumentor-signature__name">iis_get_post_reading_time</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\WP_Post">WP_Post</abbr>|object|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$post_id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">float</span></code>
 
         <section class="phpdocumentor-description"><p>Uses the calculation from https://blog.medium.com/read-time-and-you-bc2048ab620c.</p>
 </section>
@@ -963,7 +1011,7 @@ https://stackoverflow.com/questions/8290537/is-php-str-word-count-multibyte-safe
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">float|false</span>
+    <span class="phpdocumentor-signature__response_type">float</span>
             &mdash;
         
     
@@ -976,7 +1024,7 @@ https://stackoverflow.com/questions/8290537/is-php-str-word-count-multibyte-safe
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/helpers.php"><a href="files/src-helpers.html"><abbr title="src/helpers.php">helpers.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">390</span>
+    <span class="phpdocumentor-element-found-in__line">400</span>
 
     </aside>
 

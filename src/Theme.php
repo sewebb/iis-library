@@ -16,6 +16,7 @@ class Theme {
 		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
 		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
+		add_action( 'http_api_curl', [ Theme::class, 'force_curl_ipv4' ] );
 		add_filter(
 			'site_status_tests',
 			function( $tests ) {
@@ -23,6 +24,8 @@ class Theme {
 				return $tests;
 			}
 		);
+		// Add other file types to allowed mime types
+		add_filter( 'mime_types', [ Theme::class, 'add_to_upload_mimes' ] );
 
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
@@ -260,7 +263,8 @@ class Theme {
 	}
 
 	// Clearfix for right aligned Gutenberg blocks
-	public static function inject_admin_styles() {
+	public static function inject_admin_styles()
+	{
 		echo '<style>
 					.block-editor-block-list__block:has([data-align="right"]) + .block-editor-block-list__block,
 					[data-align="right"] + .block-editor-block-list__block {
@@ -269,5 +273,21 @@ class Theme {
 					top: 1rem;
 				}
 		  		</style>';
+
+	}
+
+	public static function force_curl_ipv4( $curl_handle ) {
+		curl_setopt( $curl_handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+	}
+
+	/**
+	 * Add ics to allowed mime types
+	 *
+	 * @param array $mimes Original set of allowed mime types
+	 * @return array          Modified set of mime types, including ics
+	 */
+	public static function add_to_upload_mimes( $mimes ): array {
+		$mimes['ics'] = 'text/calendar';
+		return $mimes;
 	}
 }

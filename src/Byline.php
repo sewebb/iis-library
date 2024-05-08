@@ -109,21 +109,45 @@ class Byline {
 	 * @param string[] $options
 	 * @return string
 	 */
-	public static function render( $options = ['date', 'reviewed_by', 'updated_at'] ): string {
-		$avatar = get_avatar( get_the_author_meta( 'ID' ), 64, 'https://static.internetstiftelsen.se/images/transparent-avatar.png', '', [ 'class' => imns( 'm-byline__portrait', false ) ] );
-		$updated_at = ( in_array( 'updated_at', $options, true ) ) ? get_post_meta( get_the_ID(), 'updated_at', true ) : null;
-		$reviewed_by = ( in_array( 'reviewed_by', $options, true ) ) ? get_field( 'reviewed_by' ) : null;
+	public static function render( $options = ['date', 'reviewed_by', 'updated_at', 'avatar', 'author_name', 'author_link'], int $post_id = null ): string {
+		if ( ! $post_id ) {
+			global $post;
+
+			$post_id = get_the_ID();
+			$the_post = $post;
+		} else {
+			$the_post = get_post( $post_id );
+		}
+
+		$author_id        = $the_post->post_author;
+		$author_name      = get_the_author_meta( 'display_name', $author_id );
+		$avatar           = get_avatar( $author_id, 64, 'https://static.internetstiftelsen.se/images/transparent-avatar.png', '', [ 'class' => imns( 'm-byline__portrait', false ) ] );
+		$updated_at       = ( in_array( 'updated_at', $options, true ) ) ? get_post_meta( $post_id, 'updated_at', true ) : null;
+		$reviewed_by      = ( in_array( 'reviewed_by', $options, true ) ) ? get_field( 'reviewed_by', $post_id ) : null;
+		$show_avatar      = in_array( 'avatar', $options );
+		$show_author_name = in_array( 'author_name', $options );
+		$show_author_link = in_array( 'author_link', $options );
 
 		ob_start();
 		?>
 		<div class="<?php imns( 'm-byline' ); ?> u-m-b-4">
-			<?php echo $avatar; ?>
-			<span class="<?php imns( 'a-meta' ); ?>"><span class="small"><?php _e( 'Author', 'iis-library' ); ?></span></span>
-			<a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ) ); ?>" class="<?php imns( 'm-byline__link' ); ?>" title="<?php esc_attr_e( 'View all articles by author', 'iis-library' ); ?>"><?php the_author_meta( 'display_name' ); ?></a>
+			<?php
+			if ( $show_avatar ) {
+				echo $avatar;
+			} ?>
+
+			<?php if ( $show_author_name ) : ?>
+				<span class="<?php imns( 'a-meta' ); ?>"><span class="small"><?php _e( 'Author', 'iis-library' ); ?></span></span>
+				<?php if ( $show_author_link ) : ?>
+					<a href="<?php echo get_author_posts_url( $author_id ); ?>" class="<?php imns( 'm-byline__link' ); ?>" title="<?php esc_attr_e( 'View all articles by author', 'iis-library' ); ?>"><?php echo esc_html( $author_name ); ?></a>
+				<?php else: ?>
+					<?php echo esc_html( $author_name ); ?>
+				<?php endif; ?>
+			<?php endif; ?>
 			<ul class="<?php imns( 'm-byline__list' ); ?>">
 				<?php if ( in_array( 'date', $options, true ) ): ?>
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
-					<strong><?php _e( 'Published:', 'iis-library' ); ?></strong> <?php echo get_the_date(); ?>
+					<strong><?php _e( 'Published:', 'iis-library' ); ?></strong> <?php echo get_the_date( '', $the_post ); ?>
 				</li>
 				<?php endif; ?>
 				<?php if ( $updated_at ) : ?>

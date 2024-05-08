@@ -15,10 +15,7 @@
         <exclude name="Generic.Files.LineLength"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
         <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
-        <exclude name="WordPress.XSS.EscapeOutput"/>
-        <exclude name="WordPress.PHP.StrictComparisons"/>
         <exclude name="WordPress.PHP.DiscouragedFunctions.DiscouragedWithAlternative" />
-        <exclude name="WordPress.Variables.GlobalVariables"/>
         <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
         <exclude name="Squiz.Commenting.BlockComment.NoNewLine"/>
         <exclude name="Squiz.Commenting.BlockComment.NoEmptyLineBefore"/>
@@ -28,17 +25,8 @@
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
         <exclude name="Squiz.Commenting.InlineComment.NoSpaceBefore"/>
         <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
-        <exclude name="WordPress.VIP.PostsPerPage.posts_per_page" />
-        <exclude name="WordPress.VIP.PostsPerPage.numberposts" />
-        <exclude name="WordPress.VIP.DirectDatabaseQuery" />
-        <exclude name="WordPress.VIP.ValidatedSanitizedInput" />
-        <exclude name="WordPress.VIP.SessionVariableUsage" />
-        <exclude name="WordPress.VIP.SuperGlobalInputUsage" />
-        <exclude name="WordPress.VIP.RestrictedVariables.cache_constraints" />
-        <exclude name="WordPress.VIP.RestrictedFunctions" />
-        <exclude name="WordPress.VIP.SlowDBQuery.slow_db_query" />
-        <exclude name="WordPress.VIP.RestrictedVariables.user_meta" />
         <exclude name="WordPress.CSRF.NonceVerification.NoNonceVerification" />
         <exclude name="Squiz.Operators.ValidLogicalOperators.NotAllowed"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
     </rule>
 </ruleset>

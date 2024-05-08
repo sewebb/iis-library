@@ -91,6 +91,11 @@ Search.appendIndex(
             "summary": "Count\u0020number\u0020of\u0020words\u0020in\u0020string.",
             "url": "namespaces/default.html#function_iis_word_count"
         },                {
+            "fqsen": "\\iis_get_reading_time\u0028\u0029",
+            "name": "iis_get_reading_time",
+            "summary": "Get\u0020reading\u0020time\u0020for\u0020a\u0020string,\u0020in\u0020minutes.",
+            "url": "namespaces/default.html#function_iis_get_reading_time"
+        },                {
             "fqsen": "\\iis_get_post_reading_time\u0028\u0029",
             "name": "iis_get_post_reading_time",
             "summary": "Get\u0020reading\u0020time\u0020for\u0020a\u0020post,\u0020in\u0020minutes.",
@@ -105,6 +110,16 @@ Search.appendIndex(
             "name": "Submenu",
             "summary": "Helper\u0020methods\u0020for\u0020submenu\u0020functionality",
             "url": "classes/Internetstiftelsen-Submenu.html"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Submenu\u003A\u003AmapChildren\u0028\u0029",
+            "name": "mapChildren",
+            "summary": "",
+            "url": "classes/Internetstiftelsen-Submenu.html#method_mapChildren"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Submenu\u003A\u003Adata\u0028\u0029",
+            "name": "data",
+            "summary": "",
+            "url": "classes/Internetstiftelsen-Submenu.html#method_data"
         },                {
             "fqsen": "\\Internetstiftelsen\\Submenu\u003A\u003Arender\u0028\u0029",
             "name": "render",
@@ -145,6 +160,11 @@ Search.appendIndex(
             "name": "append_submenu",
             "summary": "",
             "url": "classes/Internetstiftelsen-Theme.html#method_append_submenu"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Aforce_curl_ipv4\u0028\u0029",
+            "name": "force_curl_ipv4",
+            "summary": "",
+            "url": "classes/Internetstiftelsen-Theme.html#method_force_curl_ipv4"
         },                {
             "fqsen": "\\",
             "name": "\\",

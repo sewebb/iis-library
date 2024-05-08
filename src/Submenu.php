@@ -54,24 +54,26 @@ class Submenu {
 		$children_parent = [];
 		$posts_by_id     = [];
 
-		foreach ( $all_children as $child ) {
-			$hide = get_post_meta( $child->ID, 'display_in_submenus', true );
-			$children_parent[ $child->ID ] = $child->post_parent;
+		if ( is_array( $all_children ) ) {
+			foreach ( $all_children as $child ) {
+				$hide                          = get_post_meta( $child->ID, 'display_in_submenus', true );
+				$children_parent[ $child->ID ] = $child->post_parent;
 
-			if ( $hide === '0' ) {
-				continue;
+				if ( $hide === '0' ) {
+					continue;
+				}
+
+				$posts_by_id[ $child->ID ] = $child;
+
+				if ( ! isset( $parent_children[ $child->post_parent ] ) ) {
+					$parent_children[ $child->post_parent ] = [];
+				}
+
+				$parent_children[ $child->post_parent ][] = $child->ID;
 			}
-
-			$posts_by_id[ $child->ID ] = $child;
-
-			if ( ! isset( $parent_children[ $child->post_parent ] ) ) {
-				$parent_children[ $child->post_parent ] = [];
-			}
-
-			$parent_children[ $child->post_parent ][] = $child->ID;
 		}
 
-		if ( $top_level->ID === $post->ID ) {
+		if ( $top_level->ID === $submenu_for->ID ) {
 			// Current post is the top level. Display two levels down
 			$top_level_id = $submenu_for->ID;
 		} elseif ( ! isset( $parent_children[$submenu_for->ID] ) ) {
@@ -91,7 +93,7 @@ class Submenu {
 
 		return (object) [
 			'title' => $top_level->post_title,
-			'url' => ( $post->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
+			'url' => ( $submenu_for->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
 			'items' => self::mapChildren( $top_level->ID, $parent_children, $posts_by_id ),
 		];
 	}
@@ -109,6 +111,10 @@ class Submenu {
 			$data->items,
 			json_decode( json_encode( $append_items ) ),
 		);
+
+		if ( ! count( $data->items ) ) {
+			return '';
+		}
 
 		ob_start();
 		?>
