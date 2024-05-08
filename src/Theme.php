@@ -12,7 +12,7 @@ class Theme {
 		add_action( 'after_setup_theme', [ Theme::class, 'theme_setup' ] );
 		add_action( 'wp_footer', [ Theme::class, 'env_banner' ] );
 		add_action( 'admin_footer', [ Theme::class, 'env_banner' ] );
-		add_action(' admin_head', [ Theme::class, 'inject_admin_styles' ] );
+		add_action('admin_head', [ Theme::class, 'inject_admin_styles' ] );
 		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
 		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
@@ -263,8 +263,7 @@ class Theme {
 	}
 
 	// Clearfix for right aligned Gutenberg blocks
-	public static function inject_admin_styles()
-	{
+	public static function inject_admin_styles() {
 		echo '<style>
 					.block-editor-block-list__block:has([data-align="right"]) + .block-editor-block-list__block,
 					[data-align="right"] + .block-editor-block-list__block {
