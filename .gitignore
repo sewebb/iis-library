@@ -3,3 +3,4 @@ docs/phpdoc-cache-*
 /.phpdoc
 /phpDocumentor.phar
 .idea/
+.DS_Store
