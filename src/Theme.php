@@ -12,6 +12,7 @@ class Theme {
 		add_action( 'after_setup_theme', [ Theme::class, 'theme_setup' ] );
 		add_action( 'wp_footer', [ Theme::class, 'env_banner' ] );
 		add_action( 'admin_footer', [ Theme::class, 'env_banner' ] );
+		add_action('admin_head', [ Theme::class, 'my_custom_css'] );
 		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
 		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
@@ -256,5 +257,17 @@ class Theme {
 		}
 
 		return $content;
+	}
+
+	// Clearfix for right aligned Gutenberg blocks
+	public static function my_custom_css() {
+		echo '<style>
+					.block-editor-block-list__block:has([data-align="right"]) + .block-editor-block-list__block,
+					[data-align="right"] + .block-editor-block-list__block {
+					clear: both;
+					position: relative;
+					top: 1rem;
+				}
+		  		</style>';
 	}
 }
