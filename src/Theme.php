@@ -9,23 +9,23 @@ use WP_Post;
  */
 class Theme {
 	public static function init() {
-		add_action( 'after_setup_theme', [ Theme::class, 'theme_setup' ] );
-		add_action( 'wp_footer', [ Theme::class, 'env_banner' ] );
-		add_action( 'admin_footer', [ Theme::class, 'env_banner' ] );
-		add_action('admin_head', [ Theme::class, 'inject_admin_styles' ] );
-		add_filter( 'xmlrpc_methods', [ Theme::class, 'exclude_pingbacks' ] );
-		add_filter( 'render_block', [ Theme::class, 'append_submenu_hero' ], 10, 2 );
-		add_filter( 'the_content', [ Theme::class, 'append_submenu' ] );
-		add_action( 'http_api_curl', [ Theme::class, 'force_curl_ipv4' ] );
+		add_action( 'after_setup_theme', [ self::class, 'theme_setup' ] );
+		add_action( 'wp_footer', [ self::class, 'env_banner' ] );
+		add_action( 'admin_footer', [ self::class, 'env_banner' ] );
+		add_action( 'admin_head', [ self::class, 'inject_admin_styles' ] );
+		add_filter( 'xmlrpc_methods', [ self::class, 'exclude_pingbacks' ] );
+		add_filter( 'render_block', [ self::class, 'append_submenu_hero' ], 10, 2 );
+		add_filter( 'the_content', [ self::class, 'append_submenu' ] );
+		add_action( 'http_api_curl', [ self::class, 'force_curl_ipv4' ] );
 		add_filter(
 			'site_status_tests',
-			function( $tests ) {
+			function ( $tests ) {
 				unset( $tests['async']['background_updates'] );
 				return $tests;
 			}
 		);
 		// Add other file types to allowed mime types
-		add_filter( 'mime_types', [ Theme::class, 'add_to_upload_mimes' ] );
+		add_filter( 'mime_types', [ self::class, 'add_to_upload_mimes' ] );
 
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
@@ -272,7 +272,6 @@ class Theme {
 					top: 1rem;
 				}
 		  		</style>';
-
 	}
 
 	public static function force_curl_ipv4( $curl_handle ) {
