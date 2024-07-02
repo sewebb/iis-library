@@ -16,15 +16,15 @@ class Submenu {
 		}
 
 		return array_map(
-			function( $child_id ) use ( $parent_children, $posts_by_id ) {
+			function ( $child_id ) use ( $parent_children, $posts_by_id ) {
 				$child = $posts_by_id[ $child_id ];
 
 				return (object) [
-					'id' => $child->ID,
-					'title' => $child->post_title,
-					'url' => get_permalink( $child ),
+					'id'         => $child->ID,
+					'title'      => $child->post_title,
+					'url'        => get_permalink( $child ),
 					'is_current' => $child->ID === get_the_ID(),
-					'items' => self::mapChildren( $child->ID, $parent_children, $posts_by_id ),
+					'items'      => self::mapChildren( $child->ID, $parent_children, $posts_by_id ),
 				];
 			},
 			$children
@@ -76,7 +76,7 @@ class Submenu {
 		if ( $top_level->ID === $submenu_for->ID ) {
 			// Current post is the top level. Display two levels down
 			$top_level_id = $submenu_for->ID;
-		} elseif ( ! isset( $parent_children[$submenu_for->ID] ) ) {
+		} elseif ( ! isset( $parent_children[ $submenu_for->ID ] ) ) {
 			// Current post is on the last level
 			$top_level_id = $children_parent[ $submenu_for->ID ];
 
@@ -93,13 +93,13 @@ class Submenu {
 
 		return (object) [
 			'title' => $top_level->post_title,
-			'url' => ( $submenu_for->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
+			'url'   => ( $submenu_for->ID !== $top_level->ID ) ? get_permalink( $top_level ) : null,
 			'items' => self::mapChildren( $top_level->ID, $parent_children, $posts_by_id ),
 		];
 	}
 
 	public static function render( string $align = 'right', WP_Post|null $submenu_for = null, array $prepend_items = [], array $append_items = [] ): string {
-		$data = self::data( $submenu_for );
+		$data          = self::data( $submenu_for );
 		$wrapper_class = '';
 
 		if ( $align ) {
@@ -138,7 +138,7 @@ class Submenu {
 
 				foreach ( $data->items as $child ) :
 					$link_classes = 'm-submenu__item__link';
-					$hidden = true;
+					$hidden       = true;
 
 					if ( count( $child->items ?? [] ) ) {
 						$link_classes .= ' m-submenu__item__link--has-sublevel';

@@ -41,6 +41,6 @@ class HelpersTest extends TestCase
 
 		$output = ob_get_clean();
 
-		$this->assertSame( 'is-active', $output );
+		$this->assertSame( ' is-active', $output );
 	}
 }

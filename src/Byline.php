@@ -23,7 +23,7 @@ class Byline {
 
 		add_action(
 			'acf/init',
-			function () use ($location) {
+			function () use ( $location ) {
 				if ( $location ) {
 					$location = array_map(
 						function ( $post_type ) {
@@ -109,11 +109,11 @@ class Byline {
 	 * @param string[] $options
 	 * @return string
 	 */
-	public static function render( $options = ['date', 'reviewed_by', 'updated_at', 'avatar', 'author_name', 'author_link'], int $post_id = null ): string {
+	public static function render( $options = [ 'date', 'reviewed_by', 'updated_at', 'avatar', 'author_name', 'author_link' ], int $post_id = null ): string {
 		if ( ! $post_id ) {
 			global $post;
 
-			$post_id = get_the_ID();
+			$post_id  = get_the_ID();
 			$the_post = $post;
 		} else {
 			$the_post = get_post( $post_id );
@@ -134,18 +134,19 @@ class Byline {
 			<?php
 			if ( $show_avatar ) {
 				echo $avatar;
-			} ?>
+			}
+			?>
 
 			<?php if ( $show_author_name ) : ?>
 				<span class="<?php imns( 'a-meta' ); ?>"><span class="small"><?php _e( 'Author', 'iis-library' ); ?></span></span>
 				<?php if ( $show_author_link ) : ?>
 					<a href="<?php echo get_author_posts_url( $author_id ); ?>" class="<?php imns( 'm-byline__link' ); ?>" title="<?php esc_attr_e( 'View all articles by author', 'iis-library' ); ?>"><?php echo esc_html( $author_name ); ?></a>
-				<?php else: ?>
+				<?php else : ?>
 					<?php echo esc_html( $author_name ); ?>
 				<?php endif; ?>
 			<?php endif; ?>
 			<ul class="<?php imns( 'm-byline__list' ); ?>">
-				<?php if ( in_array( 'date', $options, true ) ): ?>
+				<?php if ( in_array( 'date', $options, true ) ) : ?>
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
 					<strong><?php _e( 'Published:', 'iis-library' ); ?></strong> <?php echo get_the_date( '', $the_post ); ?>
 				</li>
@@ -169,7 +170,10 @@ class Byline {
 				<li class="<?php imns( 'm-byline__list__item' ); ?>">
 					<strong><?php _e( 'Reviewed by', 'iis-library' ); ?>:</strong> <?php echo esc_html( $name ); ?>
 				</li>
-				<?php endforeach; endif; ?>
+				<?php
+				endforeach;
+endif;
+?>
 			</ul>
 		</div>
 		<?php

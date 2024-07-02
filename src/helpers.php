@@ -4,12 +4,12 @@ if ( ! function_exists( 'iis_config' ) ) {
 	/**
 	 * IIS Start config helper
 	 *
-	 * @param string $keys         the key to get the value for. Use dot notation for going deeper.
-	 * @param mixed|null $fallback fallback if value is missing
+	 * @param string      $keys         the key to get the value for. Use dot notation for going deeper.
+	 * @param mixed|null  $fallback fallback if value is missing
 	 * @param string|null $directory The directory where the config file is located.
 	 * @return mixed     The value (if found) for the given key.
 	 */
-	function iis_config( string $keys, $fallback = null, ?string $directory = null) {
+	function iis_config( string $keys, $fallback = null, ?string $directory = null ) {
 		if ( ! $directory ) {
 			$directory = get_stylesheet_directory();
 		}
@@ -124,7 +124,7 @@ if ( ! function_exists( 'iis_active' ) ) {
 		$value = (string) $value;
 
 		if ( is_null( $compare_with ) ) {
-			$active = ! ! $value;
+			$active = (bool) $value;
 		} else {
 			$active = ( is_array( $compare_with ) ) ? in_array( $value, array_map( 'strval', $compare_with ), true ) : $value === (string) $compare_with;
 		}
@@ -168,12 +168,12 @@ if ( ! function_exists( 'iis_mix' ) ) {
 	/**
 	 * Get the path to a versioned Mix file
 	 *
-	 * @param string $path Path tp mix manifest.
-	 * @param string $base Base path to scripts.
+	 * @param string      $path Path tp mix manifest.
+	 * @param string      $base Base path to scripts.
 	 * @param string|null $manifest_directory The directory where the manifest is located.
 	 * @return string|null
 	 */
-	function iis_mix( $path, $base = '/assets/', ?string $manifest_directory = null): ?string {
+	function iis_mix( $path, $base = '/assets/', ?string $manifest_directory = null ): ?string {
 		$manifest = iis_mix_manifest( $manifest_directory );
 
 		if ( ! $manifest ) {
@@ -203,7 +203,7 @@ if ( ! function_exists( 'iis_get_hero' ) ) {
 		if ( has_blocks( $content ) ) {
 			$blocks = parse_blocks( $content );
 
-			if ( in_array( $blocks[0]['blockName'], ['iis/hero', 'iis/glider-hero'], true ) ) {
+			if ( in_array( $blocks[0]['blockName'], [ 'iis/hero', 'iis/glider-hero' ], true ) ) {
 				return $blocks[0];
 			}
 		}
