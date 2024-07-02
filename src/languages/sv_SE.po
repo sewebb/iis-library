@@ -39,8 +39,6 @@ msgid "Published:"
 msgstr "Publicerad:"
 
 #: src/Submenu.php:121
-#, fuzzy
-#| msgid "Submenu:"
 msgid "Submenu"
 msgstr "Undermeny"
 
