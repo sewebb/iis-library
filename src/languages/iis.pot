@@ -37,3 +37,11 @@ msgstr ""
 #: src/Byline.php:121
 msgid "Published:"
 msgstr ""
+
+#: src/Submenu.php:121
+msgid "Submenu"
+msgstr ""
+
+#: src/Submenu.php:170
+msgid "Open/Close"
+msgstr ""

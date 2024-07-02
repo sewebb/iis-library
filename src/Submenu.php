@@ -118,7 +118,7 @@ class Submenu {
 
 		ob_start();
 		?>
-		<nav class="rs_skip <?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu">
+		<nav class="rs_skip <?php echo esc_attr( $wrapper_class ); ?>" id="pageSubmenu" aria-label="<?php esc_html_e( 'Submenu', 'iis-library' ); ?>">
 			<dl class="<?php imns( 'm-submenu' ); ?>" data-responsive="xs:article,lg:pageSubmenu">
 				<dt class="<?php imns( 'm-submenu__title' ); ?>">
 					<?php if ( $data->url ) : ?>
@@ -167,7 +167,7 @@ class Submenu {
 									<span><?php echo apply_filters( 'the_title', $child->title ); ?></span>
 								</a>
 								<button type="button" class="<?php imns( 'm-submenu__item__toggle-button' ); ?>" data-a11y-toggle="sublvl<?php echo $child->id; ?>" aria-controls="sublvl<?php echo $child->id; ?>">
-									<span class="u-visuallyhidden">Öppna/stäng</span>
+									<span class="u-visuallyhidden"><?php esc_html_e( 'Open/Close', 'iis-library' ); ?></span>
 								</button>
 							</div>
 							<ul class="<?php imns( 'm-submenu__sublevel' ); ?>" <?php echo ( $hidden ) ? '' : 'data-a11y-toggle-open'; ?> id="sublvl<?php echo $child->id; ?>" data-focus-trap="false">
