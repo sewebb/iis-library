@@ -27,6 +27,9 @@ class Theme {
 		// Add other file types to allowed mime types
 		add_filter( 'mime_types', [ self::class, 'add_to_upload_mimes' ] );
 
+		// Disable Imagify for PDFs
+		add_filter( 'imagify_auto_optimize_attachment', [ self::class, 'no_auto_optimize_pdf' ], 10, 3 );
+
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
 	}
@@ -287,5 +290,23 @@ class Theme {
 	public static function add_to_upload_mimes( $mimes ): array {
 		$mimes['ics'] = 'text/calendar';
 		return $mimes;
+	}
+
+	/**
+	 * Disable Imagify for PDFs
+	 *
+	 * @param bool $auto_optimize_attachment Whether to auto-optimize the attachment.
+	 * @param int  $attachment_id            Attachment ID.
+	 * @param array $attachment              Attachment data.
+	 * @return bool
+	 */
+	public static function no_auto_optimize_pdf( $auto_optimize_attachment, $attachment_id, $attachment ): bool {
+		if ( ! $auto_optimize_attachment ) {
+			return false;
+		}
+
+		$mime_type = get_post_mime_type( $attachment_id );
+
+		return 'application/pdf' !== $mime_type;
 	}
 }
