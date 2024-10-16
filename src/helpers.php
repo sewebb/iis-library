@@ -199,8 +199,8 @@ if ( ! function_exists( 'iis_vite' ) ) {
 			'production' !== wp_get_environment_type() && iis_vite_is_dev()
 		) {
 			wp_enqueue_script( 'vite', iis_vite_dev_server_url( '@vite/client' ), [], null, true );
-			wp_enqueue_script( 'iis-script', iis_vite_dev_server_url( 'js/site.js' ), [ 'vite' ], null, true );
-			wp_enqueue_style( 'iis-style', iis_vite_dev_server_url( 'scss/site.scss' ), [], null );
+			wp_enqueue_script( 'iis-script', iis_vite_dev_server_url( 'assets/js/site.js' ), [ 'vite' ], null, true );
+			wp_enqueue_style( 'iis-style', iis_vite_dev_server_url( 'assets/scss/site.scss' ), [], null );
 		} else {
 			$manifest = iis_vite_manifest();
 
