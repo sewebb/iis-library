@@ -252,6 +252,7 @@ if ( ! function_exists( 'iis_mix' ) ) {
 	 * @param string      $base Base path to scripts.
 	 * @param string|null $manifest_directory The directory where the manifest is located.
 	 * @return string|null
+	 * @deprecated Migrate to Vite
 	 */
 	function iis_mix( $path, $base = '/assets/', ?string $manifest_directory = null ): ?string {
 		$manifest = iis_mix_manifest( $manifest_directory );
