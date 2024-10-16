@@ -46,6 +46,26 @@ Search.appendIndex(
             "summary": "Echo\u0020a\u0020string\u0020if\u0020the\u0020comparison\u0020is\u0020true,\u0020otherwise\u0020empty\u0020string",
             "url": "namespaces/default.html#function_iis_active"
         },                {
+            "fqsen": "\\iis_vite_dev_server_url\u0028\u0029",
+            "name": "iis_vite_dev_server_url",
+            "summary": "Get\u0020the\u0020URL\u0020to\u0020the\u0020Vite\u0020dev\u0020server",
+            "url": "namespaces/default.html#function_iis_vite_dev_server_url"
+        },                {
+            "fqsen": "\\iis_vite_is_dev\u0028\u0029",
+            "name": "iis_vite_is_dev",
+            "summary": "Check\u0020if\u0020the\u0020Vite\u0020dev\u0020server\u0020is\u0020running",
+            "url": "namespaces/default.html#function_iis_vite_is_dev"
+        },                {
+            "fqsen": "\\iis_vite_manifest\u0028\u0029",
+            "name": "iis_vite_manifest",
+            "summary": "Get\u0020the\u0020Vite\u0020manifest",
+            "url": "namespaces/default.html#function_iis_vite_manifest"
+        },                {
+            "fqsen": "\\iis_vite\u0028\u0029",
+            "name": "iis_vite",
+            "summary": "Enqueue\u0020the\u0020Vite\u0020assets",
+            "url": "namespaces/default.html#function_iis_vite"
+        },                {
             "fqsen": "\\iis_mix_manifest\u0028\u0029",
             "name": "iis_mix_manifest",
             "summary": "Get\u0020the\u0020laravel\u0020mix\u0020manifest",
@@ -161,10 +181,25 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Internetstiftelsen-Theme.html#method_append_submenu"
         },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Ainject_admin_styles\u0028\u0029",
+            "name": "inject_admin_styles",
+            "summary": "",
+            "url": "classes/Internetstiftelsen-Theme.html#method_inject_admin_styles"
+        },                {
             "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Aforce_curl_ipv4\u0028\u0029",
             "name": "force_curl_ipv4",
             "summary": "",
             "url": "classes/Internetstiftelsen-Theme.html#method_force_curl_ipv4"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Aadd_to_upload_mimes\u0028\u0029",
+            "name": "add_to_upload_mimes",
+            "summary": "Add\u0020ics\u0020to\u0020allowed\u0020mime\u0020types",
+            "url": "classes/Internetstiftelsen-Theme.html#method_add_to_upload_mimes"
+        },                {
+            "fqsen": "\\Internetstiftelsen\\Theme\u003A\u003Ano_auto_optimize_pdf\u0028\u0029",
+            "name": "no_auto_optimize_pdf",
+            "summary": "Disable\u0020Imagify\u0020for\u0020PDFs",
+            "url": "classes/Internetstiftelsen-Theme.html#method_no_auto_optimize_pdf"
         },                {
             "fqsen": "\\",
             "name": "\\",
