@@ -216,9 +216,13 @@ if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
 	 *
 	 * @return void
 	 */
-	function iis_enqueue_vite_asset( string $handle, string $path, string $type = 'script', bool $in_footer = true ): void {
-		$deps = [];
-
+	function iis_enqueue_vite_asset(
+		string $handle,
+		string $path,
+		string $type = 'script',
+		array $deps = [],
+		bool $in_footer = true,
+	): void {
 		if ( iis_vite_is_dev() ) {
 			if ( 'script' === $type ) {
 				$deps[] = 'vite';
@@ -238,7 +242,7 @@ if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
 		if ( 'script' === $type ) {
 			wp_enqueue_script( $handle, $path, $deps, null, $in_footer );
 		} elseif ( 'style' === $type ) {
-			wp_enqueue_style( $handle, $path, [], null );
+			wp_enqueue_style( $handle, $path, $deps, null );
 		}
 	}
 }
@@ -249,12 +253,13 @@ if ( ! function_exists( 'iis_enqueue_vite_script' ) ) {
 	 *
 	 * @param string $handle    The handle for the script.
 	 * @param string $path      The path to the script.
+	 * @param array  $deps      An array of registered script handles this script depends on.
 	 * @param bool   $in_footer Whether to enqueue the script before </body>.
 	 *
 	 * @return void
 	 */
-	function iis_enqueue_vite_script( string $handle, string $path, bool $in_footer = true ): void {
-		iis_enqueue_vite_asset( $handle, $path, in_footer: $in_footer );
+	function iis_enqueue_vite_script( string $handle, string $path, array $deps = [], bool $in_footer = true ): void {
+		iis_enqueue_vite_asset( $handle, $path, deps: $deps, in_footer: $in_footer );
 	}
 }
 
@@ -264,11 +269,12 @@ if ( ! function_exists( 'iis_enqueue_vite_style' ) ) {
 	 *
 	 * @param string $handle The handle for the style.
 	 * @param string $path   The path to the style.
+	 * @param array  $deps   An array of registered style handles this style depends on.
 	 *
 	 * @return void
 	 */
-	function iis_enqueue_vite_style( string $handle, string $path ): void {
-		iis_enqueue_vite_asset( $handle, $path, 'style' );
+	function iis_enqueue_vite_style( string $handle, string $path, array $deps = [] ): void {
+		iis_enqueue_vite_asset( $handle, $path, 'style', deps: $deps );
 	}
 }
 
