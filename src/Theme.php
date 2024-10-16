@@ -145,6 +145,20 @@ class Theme {
 
 		// Don't use the texturize function, show posts as is
 		add_filter( 'run_wptexturize', '__return_false' );
+
+		add_filter(
+			'script_loader_tag',
+			function ( string $tag, string $handle, string $src ) {
+				if ( in_array( $handle, [ 'vite', 'iis-script' ], true ) ) {
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+					return '<script type="module" src="' . esc_url( $src ) . '" defer></script>';
+				}
+
+				return $tag;
+			},
+			10,
+			3
+		);
 	}
 
 	/**
