@@ -61,6 +61,11 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020Vite\u0020manifest",
             "url": "namespaces/default.html#function_iis_vite_manifest"
         },                {
+            "fqsen": "\\iis_vite_dev_script\u0028\u0029",
+            "name": "iis_vite_dev_script",
+            "summary": "Enqueue\u0020the\u0020Vite\u0020dev\u0020script",
+            "url": "namespaces/default.html#function_iis_vite_dev_script"
+        },                {
             "fqsen": "\\iis_enqueue_vite_asset\u0028\u0029",
             "name": "iis_enqueue_vite_asset",
             "summary": "Enqueue\u0020a\u0020Vite\u0020asset",
