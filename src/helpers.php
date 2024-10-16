@@ -188,6 +188,75 @@ if ( ! function_exists( 'iis_vite_manifest' ) ) {
 	}
 }
 
+if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
+	/**
+	 * Enqueue a Vite asset
+	 *
+	 * @param string $handle    The handle for the script.
+	 * @param string $path      The path to the asset.
+	 * @param string $type      The type of asset.
+	 * @param bool   $in_footer Whether to enqueue the script before </body>. Ignored for styles.
+	 *
+	 * @return void
+	 */
+	function iis_enqueue_vite_asset( string $handle, string $path, string $type = 'script', bool $in_footer = true ): void {
+		$deps = [];
+
+		if (
+			'production' !== wp_get_environment_type() && iis_vite_is_dev()
+		) {
+			if ( 'script' === $type ) {
+				$deps[] = 'vite';
+			}
+
+			$path = iis_vite_dev_server_url( $path );
+		} else {
+			$manifest = iis_vite_manifest();
+
+			if ( ! $manifest ) {
+				return;
+			}
+
+			$path = get_theme_file_uri( 'assets/dist/' . $manifest[ $path ]['file'] );
+		}
+
+		if ( 'script' === $type ) {
+			wp_enqueue_script( $handle, $path, $deps, null, $in_footer );
+		} elseif ( 'style' === $type ) {
+			wp_enqueue_style( $handle, $path, [], null );
+		}
+	}
+}
+
+if ( ! function_exists( 'iis_enqueue_vite_script' ) ) {
+	/**
+	 * Enqueue a Vite script
+	 *
+	 * @param string $handle    The handle for the script.
+	 * @param string $path      The path to the script.
+	 * @param bool   $in_footer Whether to enqueue the script before </body>.
+	 *
+	 * @return void
+	 */
+	function iis_enqueue_vite_script( string $handle, string $path, bool $in_footer = true ): void {
+		iis_enqueue_vite_asset( $handle, $path, in_footer: $in_footer );
+	}
+}
+
+if ( ! function_exists( 'iis_enqueue_vite_style' ) ) {
+	/**
+	 * Enqueue a Vite style
+	 *
+	 * @param string $handle The handle for the style.
+	 * @param string $path   The path to the style.
+	 *
+	 * @return void
+	 */
+	function iis_enqueue_vite_style( string $handle, string $path ): void {
+		iis_enqueue_vite_asset( $handle, $path, 'style' );
+	}
+}
+
 if ( ! function_exists( 'iis_vite' ) ) {
 	/**
 	 * Enqueue the Vite assets
