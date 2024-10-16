@@ -137,11 +137,91 @@ if ( ! function_exists( 'iis_active' ) ) {
 	}
 }
 
+if ( ! function_exists( 'iis_vite_dev_server_url' ) ) {
+	/**
+	 * Get the URL to the Vite dev server
+	 *
+	 * @param string $path The path to the asset
+	 *
+	 * @return string
+	 */
+	function iis_vite_dev_server_url( string $path ): string {
+		$port = iis_config( 'vite.port', 5173 );
+
+		return "http://localhost:$port/$path";
+	}
+}
+
+if ( ! function_exists( 'iis_vite_is_dev' ) ) {
+	/**
+	 * Check if the Vite dev server is running
+	 *
+	 * @return bool
+	 */
+	function iis_vite_is_dev(): bool {
+		$ch = curl_init( iis_vite_dev_server_url( 'assets/js/site.js' ) );
+
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_exec( $ch );
+
+		$http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+		curl_close( $ch );
+
+		return 200 === $http_code;
+	}
+}
+
+if ( ! function_exists( 'iis_vite_manifest' ) ) {
+	/**
+	 * Get the Vite manifest
+	 *
+	 * @return array|null
+	 */
+	function iis_vite_manifest(): ?array {
+		$manifest_path = get_theme_file_path( 'assets/dist/.vite/manifest.json' );
+
+		if ( ! file_exists( $manifest_path ) ) {
+			return null;
+		}
+
+		return json_decode( file_get_contents( $manifest_path ), true );
+	}
+}
+
+if ( ! function_exists( 'iis_vite' ) ) {
+	/**
+	 * Enqueue the Vite assets
+	 *
+	 * @return void
+	 */
+	function iis_vite(): void {
+		if (
+			'production' !== wp_get_environment_type() && iis_vite_is_dev()
+		) {
+			wp_enqueue_script( 'vite', iis_vite_dev_server_url( '@vite/client' ), [], null, true );
+			wp_enqueue_script( 'iis-script', iis_vite_dev_server_url( 'js/site.js' ), [ 'vite' ], null, true );
+			wp_enqueue_style( 'iis-style', iis_vite_dev_server_url( 'scss/site.scss' ), [], null );
+		} else {
+			$manifest = iis_vite_manifest();
+
+			if ( ! $manifest ) {
+				return;
+			}
+
+			wp_enqueue_script( 'iis-script', get_theme_file_uri( 'assets/dist/' . $manifest['assets/js/site.js']['file'] ), [], null, true );
+			wp_enqueue_style( 'iis-style', get_theme_file_uri( 'assets/dist/' . $manifest['assets/scss/site.scss']['file'] ) );
+		}
+	}
+}
+
 if ( ! function_exists( 'iis_mix_manifest' ) ) {
 	/**
 	 * Get the laravel mix manifest
 	 *
+	 * @param string|null $directory The directory where the mix manifest is located.
+	 *
 	 * @return array|null
+	 * @deprecated Migrate to Vite
 	 */
 	function iis_mix_manifest( ?string $directory = null ): ?array {
 		if ( ! $directory ) {
