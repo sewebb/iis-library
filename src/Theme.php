@@ -146,10 +146,14 @@ class Theme {
 		// Don't use the texturize function, show posts as is
 		add_filter( 'run_wptexturize', '__return_false' );
 
+		iis_vite_dev_script();
+
 		add_filter(
 			'script_loader_tag',
 			function ( string $tag, string $handle, string $src ) {
-				if ( in_array( $handle, [ 'vite', 'iis-script' ], true ) ) {
+				$theme = getenv( 'WP_DEFAULT_THEME' );
+
+				if ( 'vite' === $handle || str_starts_with( $handle, 'iis-' ) || str_starts_with( $handle, "$theme-" ) ) {
 					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
 					return '<script type="module" src="' . esc_url( $src ) . '" defer></script>';
 				}

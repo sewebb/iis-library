@@ -159,6 +159,10 @@ if ( ! function_exists( 'iis_vite_is_dev' ) ) {
 	 * @return bool
 	 */
 	function iis_vite_is_dev(): bool {
+		if ( 'production' === wp_get_environment_type() ) {
+			return false;
+		}
+
 		$ch = curl_init( iis_vite_dev_server_url( 'assets/js/site.js' ) );
 
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -188,6 +192,19 @@ if ( ! function_exists( 'iis_vite_manifest' ) ) {
 	}
 }
 
+if ( ! function_exists( 'iis_vite_dev_script' ) ) {
+	/**
+	 * Enqueue the Vite dev script
+	 *
+	 * @return void
+	 */
+	function iis_vite_dev_script(): void {
+		if ( iis_vite_is_dev() ) {
+			wp_enqueue_script( 'vite', iis_vite_dev_server_url( '@vite/client' ), [], null, true );
+		}
+	}
+}
+
 if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
 	/**
 	 * Enqueue a Vite asset
@@ -202,9 +219,7 @@ if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
 	function iis_enqueue_vite_asset( string $handle, string $path, string $type = 'script', bool $in_footer = true ): void {
 		$deps = [];
 
-		if (
-			'production' !== wp_get_environment_type() && iis_vite_is_dev()
-		) {
+		if ( iis_vite_is_dev() ) {
 			if ( 'script' === $type ) {
 				$deps[] = 'vite';
 			}
@@ -264,9 +279,7 @@ if ( ! function_exists( 'iis_vite' ) ) {
 	 * @return void
 	 */
 	function iis_vite(): void {
-		if (
-			'production' !== wp_get_environment_type() && iis_vite_is_dev()
-		) {
+		if ( iis_vite_is_dev() ) {
 			wp_enqueue_script( 'vite', iis_vite_dev_server_url( '@vite/client' ), [], null, true );
 			wp_enqueue_script( 'iis-script', iis_vite_dev_server_url( 'assets/js/site.js' ), [ 'vite' ], null, true );
 			wp_enqueue_style( 'iis-style', iis_vite_dev_server_url( 'assets/scss/site.scss' ), [], null );
