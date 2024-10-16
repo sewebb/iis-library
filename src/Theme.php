@@ -153,7 +153,21 @@ class Theme {
 			function ( string $tag, string $handle, string $src ) {
 				$theme = getenv( 'WP_DEFAULT_THEME' );
 
-				if ( 'vite' === $handle || str_starts_with( $handle, 'iis-' ) || str_starts_with( $handle, "$theme-" ) ) {
+				if ( 'vite' === $handle ) {
+					$react_refresh = iis_vite_dev_server_url( '@react-refresh' );
+
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+					return "<script type='module' src='" . esc_url( $src ) . "' defer></script>
+<script type='module'>
+  import RefreshRuntime from '" . $react_refresh . "'
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.\$RefreshReg\$ = () => {}
+  window.\$RefreshSig\$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+</script>";
+				}
+
+				if ( str_starts_with( $handle, 'iis-' ) || str_starts_with( $handle, "$theme-" ) ) {
 					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
 					return '<script type="module" src="' . esc_url( $src ) . '" defer></script>';
 				}
