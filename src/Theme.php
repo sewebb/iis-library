@@ -17,6 +17,7 @@ class Theme {
 		add_filter( 'render_block', [ self::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ self::class, 'append_submenu' ] );
 		add_action( 'http_api_curl', [ self::class, 'force_curl_ipv4' ] );
+		add_action( 'wp_enqueue_scripts', fn () => iis_vite_dev_script() );
 		add_filter(
 			'site_status_tests',
 			function ( $tests ) {
@@ -145,8 +146,6 @@ class Theme {
 
 		// Don't use the texturize function, show posts as is
 		add_filter( 'run_wptexturize', '__return_false' );
-
-		iis_vite_dev_script();
 
 		add_filter(
 			'script_loader_tag',
