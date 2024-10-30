@@ -146,6 +146,12 @@ if ( ! function_exists( 'iis_vite_dev_server_url' ) ) {
 	 * @return string
 	 */
 	function iis_vite_dev_server_url( string $path ): string {
+		$hot = file_get_contents( get_theme_file_path( 'hot' ) );
+
+		if ( $hot ) {
+			return trim( $hot ) . '/' . $path;
+		}
+
 		$port = iis_config( 'vite.port', 5173 );
 
 		return "http://localhost:$port/$path";
@@ -161,6 +167,10 @@ if ( ! function_exists( 'iis_vite_is_dev' ) ) {
 	function iis_vite_is_dev(): bool {
 		if ( 'production' === wp_get_environment_type() ) {
 			return false;
+		}
+
+		if ( file_exists( get_theme_file_path( 'hot' ) ) ) {
+			return true;
 		}
 
 		$ch = curl_init( iis_vite_dev_server_url( 'assets/js/site.js' ) );
