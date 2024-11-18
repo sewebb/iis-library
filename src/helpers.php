@@ -238,7 +238,7 @@ if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
 				$deps[] = 'vite';
 			}
 
-			$path = iis_vite_dev_server_url( $path );
+			$src = iis_vite_dev_server_url( $path );
 		} else {
 			$manifest = iis_vite_manifest();
 
@@ -246,13 +246,19 @@ if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
 				return;
 			}
 
-			$path = get_theme_file_uri( 'assets/dist/' . $manifest[ $path ]['file'] );
+			$src = get_theme_file_uri( 'assets/dist/' . $manifest[ $path ]['file'] );
 		}
 
 		if ( 'script' === $type ) {
-			wp_enqueue_script( $handle, $path, $deps, null, $in_footer );
+			wp_enqueue_script_module( $handle, $src, $deps, null );
+
+			if ( isset( $manifest[ $path ]['css'] ) ) {
+				foreach ( $manifest[ $path ]['css'] as $key => $css ) {
+					wp_enqueue_style( $handle . '-css-' . $key, get_theme_file_uri( 'assets/dist/' . $css ), [], null );
+				}
+			}
 		} elseif ( 'style' === $type ) {
-			wp_enqueue_style( $handle, $path, $deps, null );
+			wp_enqueue_style( $handle, $src, $deps, null );
 		}
 	}
 }
@@ -306,8 +312,16 @@ if ( ! function_exists( 'iis_vite' ) ) {
 				return;
 			}
 
-			wp_enqueue_script( 'iis-script', get_theme_file_uri( 'assets/dist/' . $manifest['assets/js/site.js']['file'] ), [], null, true );
+			$script = $manifest['assets/js/site.js'];
+
+			wp_enqueue_script_module( 'iis-script', get_theme_file_uri( 'assets/dist/' . $script['file'] ), [], null );
 			wp_enqueue_style( 'iis-style', get_theme_file_uri( 'assets/dist/' . $manifest['assets/scss/site.scss']['file'] ) );
+
+			if ( isset( $script['css'] ) ) {
+				foreach ( $script['css'] as $key => $css ) {
+					wp_enqueue_style( 'iis-script-css-' . $key, get_theme_file_uri( 'assets/dist/' . $css ), [], null );
+				}
+			}
 		}
 	}
 }

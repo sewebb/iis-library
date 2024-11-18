@@ -166,11 +166,6 @@ class Theme {
 </script>";
 				}
 
-				if ( str_starts_with( $handle, 'iis-' ) || str_starts_with( $handle, "$theme-" ) ) {
-					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
-					return '<script type="module" src="' . esc_url( $src ) . '" defer></script>';
-				}
-
 				return $tag;
 			},
 			10,
