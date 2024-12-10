@@ -168,7 +168,8 @@ class Theme {
 
 				if ( str_starts_with( $handle, 'iis-' ) || str_starts_with( $handle, "$theme-" ) ) {
 					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
-					return str_replace( 'src="' . $src . '"', 'src="' . $src . '" type="module" defer', $tag );
+					$pattern = '/type=\"text\/javascript\"(.*?)id=\"' . $handle . '-js\"/i';
+					return preg_replace( $pattern, 'type="module" defer $1 id="' . $handle . '-js"', $tag );
 				}
 
 				return $tag;
