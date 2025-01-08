@@ -146,6 +146,10 @@ if ( ! function_exists( 'iis_vite_dev_server_url' ) ) {
 	 * @return string
 	 */
 	function iis_vite_dev_server_url( string $path ): string {
+		if ( ! file_exists( get_theme_file_path( 'hot' ) ) ) {
+			return '';
+		}
+
 		$hot = file_get_contents( get_theme_file_path( 'hot' ) );
 
 		if ( $hot ) {
@@ -165,7 +169,7 @@ if ( ! function_exists( 'iis_vite_is_dev' ) ) {
 	 * @return bool
 	 */
 	function iis_vite_is_dev(): bool {
-		if ( 'production' === wp_get_environment_type() ) {
+		if ( 'development' !== wp_get_environment_type() ) {
 			return false;
 		}
 
@@ -173,7 +177,13 @@ if ( ! function_exists( 'iis_vite_is_dev' ) ) {
 			return true;
 		}
 
-		$ch = curl_init( iis_vite_dev_server_url( 'assets/js/site.js' ) );
+		$url = iis_vite_dev_server_url( 'assets/js/site.js' );
+
+		if ( ! $url ) {
+			return false;
+		}
+
+		$ch = curl_init( $url );
 
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_exec( $ch );
