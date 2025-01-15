@@ -36,12 +36,25 @@ class Theme {
 	}
 
 	/**
+	 * Load translations
+	 *
+	 * @return void
+	 */
+	public static function load_translations() {
+		$domain = 'iis-library';
+		$locale = apply_filters( 'theme_locale', get_locale(), $domain );
+
+		$mofile = __DIR__ . "/languages/{$locale}.mo";
+		load_textdomain( $domain, $mofile );
+	}
+
+	/**
 	 * Setup theme
 	 *
 	 * @return void
 	 */
 	public static function theme_setup() {
-		load_theme_textdomain( 'iis-library', __DIR__ . '/languages' );
+		self::load_translations();
 
 		add_theme_support( 'automatic-feed-links' );
 		add_theme_support( 'title-tag' );
