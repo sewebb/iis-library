@@ -31,6 +31,9 @@ class Theme {
 		// Disable Imagify for PDFs
 		add_filter( 'imagify_auto_optimize_attachment', [ self::class, 'no_auto_optimize_pdf' ], 10, 3 );
 
+		// Sharpen resized images
+		add_filter( 'image_make_intermediate_size', [ self::class, 'sharpen_resized_files' ], 900 );
+
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
 	}
@@ -343,8 +346,8 @@ class Theme {
 	/**
 	 * Disable Imagify for PDFs
 	 *
-	 * @param bool $auto_optimize_attachment Whether to auto-optimize the attachment.
-	 * @param int  $attachment_id            Attachment ID.
+	 * @param bool  $auto_optimize_attachment Whether to auto-optimize the attachment.
+	 * @param int   $attachment_id            Attachment ID.
 	 * @param array $attachment              Attachment data.
 	 * @return bool
 	 */
@@ -356,5 +359,84 @@ class Theme {
 		$mime_type = get_post_mime_type( $attachment_id );
 
 		return 'application/pdf' !== $mime_type;
+	}
+	public static function sharpen_resized_files( $resized_file ) {
+
+		$progressive_jpg = apply_filters( 'sharpen_resized_progressive_jpg', true );
+
+		$size = getimagesize( $resized_file );
+		if ( ! $size ) {
+			return new \WP_Error( 'invalid_image', __( 'Could not read image size', 'internetdagarna' ), $resized_file );
+		}
+		list($orig_w, $orig_h, $orig_type) = $size;
+
+		switch ( $orig_type ) {
+			case IMAGETYPE_JPEG:
+				switch ( _wp_image_editor_choose() ) {
+
+					case 'WP_Image_Editor_Imagick':
+						$image = new \Imagick( $resized_file );
+
+						$image->unsharpMaskImage( 0, 0.5, 1, 0.05 );
+
+						$image->setImageCompression( \Imagick::COMPRESSION_JPEG );
+						$image->setImageCompressionQuality( apply_filters( 'jpeg_quality', 90, 'edit_image' ) );
+
+						if ( $progressive_jpg ) {
+							$image->setInterlaceScheme( \Imagick::INTERLACE_PLANE ); // Progressive JPEG on
+						}
+
+						$image->writeImage( $resized_file ); // Create Image
+
+						$image->clear();
+						$image->destroy();
+
+						break;
+
+					case 'WP_Image_Editor_GD':
+					default:
+						// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+						$image = imagecreatefromstring( file_get_contents( $resized_file ) );
+
+						$matrix = [
+							[
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+								apply_filters( 'sharpen_resized_side', -1 ),
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+							],
+							[
+								apply_filters( 'sharpen_resized_side', -1 ),
+								apply_filters( 'sharpen_resized_center', 20 ),
+								apply_filters( 'sharpen_resized_side', -1 ),
+							],
+							[
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+								apply_filters( 'sharpen_resized_side', -1 ),
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+							],
+						];
+
+						$divisor = array_sum( array_map( 'array_sum', $matrix ) );
+						$offset  = 0;
+						// Sharpen Image
+						imageconvolution( $image, $matrix, $divisor, $offset );
+						// Progressive JPEG on
+						if ( $progressive_jpg ) {
+							imageinterlace( $image, true );
+						}
+						// Create Image
+						imagejpeg( $image, $resized_file, apply_filters( 'jpeg_quality', 90, 'edit_image' ) );
+
+						// we don't need images in memory anymore
+						imagedestroy( $image );
+
+				}
+				break;
+			case IMAGETYPE_GIF:
+			case IMAGETYPE_PNG:
+				break;
+		}
+
+		return $resized_file;
 	}
 }
