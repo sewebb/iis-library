@@ -400,7 +400,7 @@ if ( ! function_exists( 'iis_get_hero' ) ) {
 	 * @param int|null $post_id
 	 * @return array|null
 	 */
-	function iis_get_hero( int $post_id = null ): ?array {
+	function iis_get_hero( ?int $post_id = null ): ?array {
 		$content = get_the_content( null, false, $post_id );
 
 		if ( has_blocks( $content ) ) {
@@ -422,7 +422,7 @@ if ( ! function_exists( 'iis_has_hero' ) ) {
 	 * @param int|null $post_id
 	 * @return bool
 	 */
-	function iis_has_hero( int $post_id = null ): bool {
+	function iis_has_hero( ?int $post_id = null ): bool {
 		$hero = iis_get_hero( $post_id );
 
 		return null !== $hero;
@@ -436,7 +436,7 @@ if ( ! function_exists( 'iis_has_full_hero' ) ) {
 	 * @param int|null $post_id
 	 * @return bool
 	 */
-	function iis_has_full_hero( int $post_id = null ): bool {
+	function iis_has_full_hero( ?int $post_id = null ): bool {
 		$hero = iis_get_hero( $post_id );
 
 		return $hero && ( 'iis/glider-hero' === $hero['blockName'] || 'full' === ( $hero['attrs']['align'] ?? 'wide' ) );
