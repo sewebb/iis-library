@@ -34,6 +34,9 @@ class Theme {
 		// Sharpen resized images
 		add_filter( 'image_make_intermediate_size', [ self::class, 'sharpen_resized_files' ], 900 );
 
+		// Hide users endpoint
+		add_filter( 'rest_endpoints',[ self::class, 'rest_endpoints' ] );
+
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
 	}
@@ -438,5 +441,19 @@ class Theme {
 		}
 
 		return $resized_file;
+	}
+
+	/**
+	 * Modify REST API endpoints to exclude user-related routes.
+	 * This enhances security by preventing public access to user data via REST API.
+	 *
+	 * @param array $endpoints Original set of registered REST API endpoints.
+	 * @return array           Modified set of endpoints, excluding user-related routes.
+	 */
+	public static function rest_endpoints( $endpoints ): array {
+		unset( $endpoints['/wp/v2/users'] );
+		unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+
+		return $endpoints;
 	}
 }
