@@ -17,6 +17,7 @@ class Theme {
 		add_filter( 'render_block', [ self::class, 'append_submenu_hero' ], 10, 2 );
 		add_filter( 'the_content', [ self::class, 'append_submenu' ] );
 		add_action( 'http_api_curl', [ self::class, 'force_curl_ipv4' ] );
+		add_action( 'wp_enqueue_scripts', fn () => iis_vite_dev_script() );
 		add_filter(
 			'site_status_tests',
 			function ( $tests ) {
@@ -30,8 +31,27 @@ class Theme {
 		// Disable Imagify for PDFs
 		add_filter( 'imagify_auto_optimize_attachment', [ self::class, 'no_auto_optimize_pdf' ], 10, 3 );
 
+		// Sharpen resized images
+		add_filter( 'image_make_intermediate_size', [ self::class, 'sharpen_resized_files' ], 900 );
+
+		// Hide users endpoint
+		add_filter( 'rest_endpoints',[ self::class, 'rest_endpoints' ] );
+
 		require_once __DIR__ . '/blocks/index.php';
 		require_once __DIR__ . '/acf.php';
+	}
+
+	/**
+	 * Load translations
+	 *
+	 * @return void
+	 */
+	public static function load_translations() {
+		$domain = 'iis-library';
+		$locale = apply_filters( 'theme_locale', get_locale(), $domain );
+
+		$mofile = __DIR__ . "/languages/{$locale}.mo";
+		load_textdomain( $domain, $mofile );
 	}
 
 	/**
@@ -40,7 +60,7 @@ class Theme {
 	 * @return void
 	 */
 	public static function theme_setup() {
-		load_theme_textdomain( 'iis-library', __DIR__ . '/languages' );
+		self::load_translations();
 
 		add_theme_support( 'automatic-feed-links' );
 		add_theme_support( 'title-tag' );
@@ -145,6 +165,40 @@ class Theme {
 
 		// Don't use the texturize function, show posts as is
 		add_filter( 'run_wptexturize', '__return_false' );
+
+		add_filter(
+			'script_loader_tag',
+			function ( string $tag, string $handle, string $src ) {
+				$theme = getenv( 'WP_DEFAULT_THEME' );
+
+				if ( 'vite' === $handle ) {
+					$react_refresh = iis_vite_dev_server_url( '@react-refresh' );
+
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+					return "<script type='module' src='" . esc_url( $src ) . "' defer></script>
+<script type='module'>
+  import RefreshRuntime from '" . $react_refresh . "'
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.\$RefreshReg\$ = () => {}
+  window.\$RefreshSig\$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+</script>";
+				}
+
+				if ( str_starts_with( $handle, 'iis-' ) || str_starts_with( $handle, "$theme-" ) ) {
+					// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+					return str_replace(
+						'type="text/javascript"',
+						'',
+						str_replace( 'id="' . $handle . '-js"', 'id="' . $handle . '-js" type="module" defer', $tag ),
+					);
+				}
+
+				return $tag;
+			},
+			10,
+			3
+		);
 	}
 
 	/**
@@ -295,8 +349,8 @@ class Theme {
 	/**
 	 * Disable Imagify for PDFs
 	 *
-	 * @param bool $auto_optimize_attachment Whether to auto-optimize the attachment.
-	 * @param int  $attachment_id            Attachment ID.
+	 * @param bool  $auto_optimize_attachment Whether to auto-optimize the attachment.
+	 * @param int   $attachment_id            Attachment ID.
 	 * @param array $attachment              Attachment data.
 	 * @return bool
 	 */
@@ -308,5 +362,98 @@ class Theme {
 		$mime_type = get_post_mime_type( $attachment_id );
 
 		return 'application/pdf' !== $mime_type;
+	}
+	public static function sharpen_resized_files( $resized_file ) {
+
+		$progressive_jpg = apply_filters( 'sharpen_resized_progressive_jpg', true );
+
+		$size = getimagesize( $resized_file );
+		if ( ! $size ) {
+			return new \WP_Error( 'invalid_image', __( 'Could not read image size', 'internetdagarna' ), $resized_file );
+		}
+		list($orig_w, $orig_h, $orig_type) = $size;
+
+		switch ( $orig_type ) {
+			case IMAGETYPE_JPEG:
+				switch ( _wp_image_editor_choose() ) {
+
+					case 'WP_Image_Editor_Imagick':
+						$image = new \Imagick( $resized_file );
+
+						$image->unsharpMaskImage( 0, 0.5, 1, 0.05 );
+
+						$image->setImageCompression( \Imagick::COMPRESSION_JPEG );
+						$image->setImageCompressionQuality( apply_filters( 'jpeg_quality', 90, 'edit_image' ) );
+
+						if ( $progressive_jpg ) {
+							$image->setInterlaceScheme( \Imagick::INTERLACE_PLANE ); // Progressive JPEG on
+						}
+
+						$image->writeImage( $resized_file ); // Create Image
+
+						$image->clear();
+						$image->destroy();
+
+						break;
+
+					case 'WP_Image_Editor_GD':
+					default:
+						// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+						$image = imagecreatefromstring( file_get_contents( $resized_file ) );
+
+						$matrix = [
+							[
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+								apply_filters( 'sharpen_resized_side', -1 ),
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+							],
+							[
+								apply_filters( 'sharpen_resized_side', -1 ),
+								apply_filters( 'sharpen_resized_center', 20 ),
+								apply_filters( 'sharpen_resized_side', -1 ),
+							],
+							[
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+								apply_filters( 'sharpen_resized_side', -1 ),
+								apply_filters( 'sharpen_resized_corner', -1.2 ),
+							],
+						];
+
+						$divisor = array_sum( array_map( 'array_sum', $matrix ) );
+						$offset  = 0;
+						// Sharpen Image
+						imageconvolution( $image, $matrix, $divisor, $offset );
+						// Progressive JPEG on
+						if ( $progressive_jpg ) {
+							imageinterlace( $image, true );
+						}
+						// Create Image
+						imagejpeg( $image, $resized_file, apply_filters( 'jpeg_quality', 90, 'edit_image' ) );
+
+						// we don't need images in memory anymore
+						imagedestroy( $image );
+
+				}
+				break;
+			case IMAGETYPE_GIF:
+			case IMAGETYPE_PNG:
+				break;
+		}
+
+		return $resized_file;
+	}
+
+	/**
+	 * Modify REST API endpoints to exclude user-related routes.
+	 * This enhances security by preventing public access to user data via REST API.
+	 *
+	 * @param array $endpoints Original set of registered REST API endpoints.
+	 * @return array           Modified set of endpoints, excluding user-related routes.
+	 */
+	public static function rest_endpoints( $endpoints ): array {
+		unset( $endpoints['/wp/v2/users'] );
+		unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+
+		return $endpoints;
 	}
 }

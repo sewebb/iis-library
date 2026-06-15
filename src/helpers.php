@@ -137,11 +137,213 @@ if ( ! function_exists( 'iis_active' ) ) {
 	}
 }
 
+if ( ! function_exists( 'iis_vite_dev_server_url' ) ) {
+	/**
+	 * Get the URL to the Vite dev server
+	 *
+	 * @param string $path The path to the asset
+	 *
+	 * @return string
+	 */
+	function iis_vite_dev_server_url( string $path ): string {
+		if ( ! file_exists( get_theme_file_path( 'hot' ) ) ) {
+			return '';
+		}
+
+		$hot = file_get_contents( get_theme_file_path( 'hot' ) );
+
+		if ( $hot ) {
+			return trim( $hot ) . '/' . $path;
+		}
+
+		$port = iis_config( 'vite.port', 5173 );
+
+		return "http://localhost:$port/$path";
+	}
+}
+
+if ( ! function_exists( 'iis_vite_is_dev' ) ) {
+	/**
+	 * Check if the Vite dev server is running
+	 *
+	 * @return bool
+	 */
+	function iis_vite_is_dev(): bool {
+		if ( 'development' !== wp_get_environment_type() ) {
+			return false;
+		}
+
+		if ( file_exists( get_theme_file_path( 'hot' ) ) ) {
+			return true;
+		}
+
+		$url = iis_vite_dev_server_url( 'assets/js/site.js' );
+
+		if ( ! $url ) {
+			return false;
+		}
+
+		$ch = curl_init( $url );
+
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_exec( $ch );
+
+		$http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+		curl_close( $ch );
+
+		return 200 === $http_code;
+	}
+}
+
+if ( ! function_exists( 'iis_vite_manifest' ) ) {
+	/**
+	 * Get the Vite manifest
+	 *
+	 * @return array|null
+	 */
+	function iis_vite_manifest(): ?array {
+		$manifest_path = get_theme_file_path( 'assets/dist/.vite/manifest.json' );
+
+		if ( ! file_exists( $manifest_path ) ) {
+			return null;
+		}
+
+		return json_decode( file_get_contents( $manifest_path ), true );
+	}
+}
+
+if ( ! function_exists( 'iis_vite_dev_script' ) ) {
+	/**
+	 * Enqueue the Vite dev script
+	 *
+	 * @return void
+	 */
+	function iis_vite_dev_script(): void {
+		if ( iis_vite_is_dev() ) {
+			wp_enqueue_script( 'vite', iis_vite_dev_server_url( '@vite/client' ), [], null, true );
+		}
+	}
+}
+
+if ( ! function_exists( 'iis_enqueue_vite_asset' ) ) {
+	/**
+	 * Enqueue a Vite asset
+	 *
+	 * @param string $handle    The handle for the script.
+	 * @param string $path      The path to the asset.
+	 * @param string $type      The type of asset.
+	 * @param bool   $in_footer Whether to enqueue the script before </body>. Ignored for styles.
+	 *
+	 * @return void
+	 */
+	function iis_enqueue_vite_asset(
+		string $handle,
+		string $path,
+		string $type = 'script',
+		array $deps = [],
+		bool $in_footer = true,
+	): void {
+		if ( iis_vite_is_dev() ) {
+			if ( 'script' === $type ) {
+				$deps[] = 'vite';
+			}
+
+			$src = iis_vite_dev_server_url( $path );
+		} else {
+			$manifest = iis_vite_manifest();
+
+			if ( ! $manifest ) {
+				return;
+			}
+
+			$src = get_theme_file_uri( 'assets/dist/' . $manifest[ $path ]['file'] );
+		}
+
+		if ( 'script' === $type ) {
+			wp_enqueue_script( $handle, $src, $deps, null, true );
+
+			if ( isset( $manifest[ $path ]['css'] ) ) {
+				foreach ( $manifest[ $path ]['css'] as $key => $css ) {
+					wp_enqueue_style( $handle . '-css-' . $key, get_theme_file_uri( 'assets/dist/' . $css ), [], null );
+				}
+			}
+		} elseif ( 'style' === $type ) {
+			wp_enqueue_style( $handle, $src, $deps, null );
+		}
+	}
+}
+
+if ( ! function_exists( 'iis_enqueue_vite_script' ) ) {
+	/**
+	 * Enqueue a Vite script
+	 *
+	 * @param string $handle    The handle for the script.
+	 * @param string $path      The path to the script.
+	 * @param array  $deps      An array of registered script handles this script depends on.
+	 * @param bool   $in_footer Whether to enqueue the script before </body>.
+	 *
+	 * @return void
+	 */
+	function iis_enqueue_vite_script( string $handle, string $path, array $deps = [], bool $in_footer = true ): void {
+		iis_enqueue_vite_asset( $handle, $path, deps: $deps, in_footer: $in_footer );
+	}
+}
+
+if ( ! function_exists( 'iis_enqueue_vite_style' ) ) {
+	/**
+	 * Enqueue a Vite style
+	 *
+	 * @param string $handle The handle for the style.
+	 * @param string $path   The path to the style.
+	 * @param array  $deps   An array of registered style handles this style depends on.
+	 *
+	 * @return void
+	 */
+	function iis_enqueue_vite_style( string $handle, string $path, array $deps = [] ): void {
+		iis_enqueue_vite_asset( $handle, $path, 'style', deps: $deps );
+	}
+}
+
+if ( ! function_exists( 'iis_vite' ) ) {
+	/**
+	 * Enqueue the Vite assets
+	 *
+	 * @return void
+	 */
+	function iis_vite(): void {
+		if ( iis_vite_is_dev() ) {
+			wp_enqueue_script( 'vite', iis_vite_dev_server_url( '@vite/client' ), [], null, true );
+			wp_enqueue_script( 'iis-script', iis_vite_dev_server_url( 'assets/js/site.js' ), [ 'vite' ], null, true );
+			wp_enqueue_style( 'iis-style', iis_vite_dev_server_url( 'assets/scss/site.scss' ), [], null );
+		} else {
+			$manifest = iis_vite_manifest();
+
+			if ( ! $manifest ) {
+				return;
+			}
+
+			$script = $manifest['assets/js/site.js'];
+
+			wp_enqueue_script( 'iis-script', get_theme_file_uri( 'assets/dist/' . $script['file'] ), [], null, true );
+			wp_enqueue_style( 'iis-style', get_theme_file_uri( 'assets/dist/' . $manifest['assets/scss/site.scss']['file'] ) );
+
+			if ( isset( $script['css'] ) ) {
+				foreach ( $script['css'] as $key => $css ) {
+					wp_enqueue_style( 'iis-script-css-' . $key, get_theme_file_uri( 'assets/dist/' . $css ), [], null );
+				}
+			}
+		}
+	}
+}
+
 if ( ! function_exists( 'iis_mix_manifest' ) ) {
 	/**
 	 * Get the laravel mix manifest
 	 *
+	 * @param string|null $directory The directory where the mix manifest is located.
+	 *
 	 * @return array|null
+	 * @deprecated Migrate to Vite
 	 */
 	function iis_mix_manifest( ?string $directory = null ): ?array {
 		if ( ! $directory ) {
@@ -172,6 +374,7 @@ if ( ! function_exists( 'iis_mix' ) ) {
 	 * @param string      $base Base path to scripts.
 	 * @param string|null $manifest_directory The directory where the manifest is located.
 	 * @return string|null
+	 * @deprecated Migrate to Vite
 	 */
 	function iis_mix( $path, $base = '/assets/', ?string $manifest_directory = null ): ?string {
 		$manifest = iis_mix_manifest( $manifest_directory );
@@ -197,7 +400,7 @@ if ( ! function_exists( 'iis_get_hero' ) ) {
 	 * @param int|null $post_id
 	 * @return array|null
 	 */
-	function iis_get_hero( int $post_id = null ): ?array {
+	function iis_get_hero( ?int $post_id = null ): ?array {
 		$content = get_the_content( null, false, $post_id );
 
 		if ( has_blocks( $content ) ) {
@@ -219,7 +422,7 @@ if ( ! function_exists( 'iis_has_hero' ) ) {
 	 * @param int|null $post_id
 	 * @return bool
 	 */
-	function iis_has_hero( int $post_id = null ): bool {
+	function iis_has_hero( ?int $post_id = null ): bool {
 		$hero = iis_get_hero( $post_id );
 
 		return null !== $hero;
@@ -233,7 +436,7 @@ if ( ! function_exists( 'iis_has_full_hero' ) ) {
 	 * @param int|null $post_id
 	 * @return bool
 	 */
-	function iis_has_full_hero( int $post_id = null ): bool {
+	function iis_has_full_hero( ?int $post_id = null ): bool {
 		$hero = iis_get_hero( $post_id );
 
 		return $hero && ( 'iis/glider-hero' === $hero['blockName'] || 'full' === ( $hero['attrs']['align'] ?? 'wide' ) );

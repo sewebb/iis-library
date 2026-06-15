@@ -43,5 +43,12 @@
 		<exclude name="Generic.Commenting.Todo.TaskFound" />
 		<exclude name="Generic.Commenting.DocComment.MissingShort" />
 		<exclude name="Universal.Operators.DisallowShortTernary.Found" />
+		<exclude name="WordPress.WP.EnqueuedResourceParameters.MissingVersion"/>
+		<exclude name="WordPress.WP.AlternativeFunctions.curl_curl_init"/>
+		<exclude name="WordPress.WP.AlternativeFunctions.curl_curl_setopt"/>
+		<exclude name="WordPress.WP.AlternativeFunctions.curl_curl_exec"/>
+		<exclude name="WordPress.WP.AlternativeFunctions.curl_curl_close"/>
+		<exclude name="WordPress.WP.AlternativeFunctions.curl_curl_getinfo"/>
+		<exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
     </rule>
 </ruleset>
