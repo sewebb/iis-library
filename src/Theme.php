@@ -445,14 +445,18 @@ class Theme {
 
 	/**
 	 * Modify REST API endpoints to exclude user-related routes.
-	 * This enhances security by preventing public access to user data via REST API.
+	 * This enhances security by preventing public access to user data via REST API,
+	 * while still allowing users with the `list_users` capability (e.g. administrators)
+	 * to use the endpoints as normal.
 	 *
 	 * @param array $endpoints Original set of registered REST API endpoints.
 	 * @return array           Modified set of endpoints, excluding user-related routes.
 	 */
 	public static function rest_endpoints( $endpoints ): array {
-		unset( $endpoints['/wp/v2/users'] );
-		unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+		if ( ! current_user_can( 'list_users' ) ) {
+			unset( $endpoints['/wp/v2/users'] );
+			unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+		}
 
 		return $endpoints;
 	}
