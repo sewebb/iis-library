@@ -585,15 +585,29 @@ if ( ! function_exists( 'iis_get_post_reading_time' ) ) {
 	 * Get reading time for a post, in minutes.
 	 * Uses the calculation from https://blog.medium.com/read-time-and-you-bc2048ab620c.
 	 *
-	 * @param WP_Post|object|int $post_id
+	 * @param WP_Post|object|int $post_id The post ID or WP_Post object.
 	 * @return float
 	 */
 	function iis_get_post_reading_time( $post_id ): float {
+		$post = get_post( $post_id );
+		if ( ! $post ) {
+			return 0.0;
+		}
+
+		$key         = 'reading_time_' . $post->ID . '_' . $post->post_modified_gmt;
+		$cache_group = 'iis_library';
+		$cached      = wp_cache_get( $key, $cache_group );
+
+		if ( false !== $cached ) {
+			return (float) $cached;
+		}
 		// Get the content and apply content filter so Gutenberg blocks are parsed.
 		$content_html = get_the_content( null, false, $post_id );
 		$content_html = apply_filters( 'the_content', $content_html );
+		$time         = iis_get_reading_time( $content_html );
+		wp_cache_set( $key, $time, $cache_group, DAY_IN_SECONDS );
 
-		return iis_get_reading_time( $content_html );
+		return $time;
 	}
 }
 
