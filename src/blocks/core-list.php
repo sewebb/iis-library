@@ -172,7 +172,7 @@ add_filter( 'render_block', 'iis_render_list_icon_classes', 10, 2 );
 function iis_add_list_icon_marker_style() {
 	wp_add_inline_style(
 		'wp-block-library',
-		'.wp-block-list[class*="bullet-list--"], .wp-block-list li[class*="bullet-list--"], .wp-block-list li.iis-list-icon { list-style: none; }'
+		'.wp-block-list[class*="bullet-list--"], .wp-block-list li[class*="bullet-list--"], .wp-block-list li.iis-list-icon { list-style: none; } .wp-block-list.bullet-list--heart-variant > li[class*="bullet-list--"]:not(.bullet-list--heart-variant)::after { content: none; }'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'iis_add_list_icon_marker_style', 20 );
@@ -186,7 +186,7 @@ add_action( 'enqueue_block_editor_assets', 'iis_add_list_icon_marker_style', 20 
  */
 function iis_add_list_icon_editor_styles( $settings ) {
 	$settings['styles'][] = [
-		'css' => '.editor-styles-wrapper .wp-block-list[class*="bullet-list--"], .editor-styles-wrapper .wp-block-list li[class*="bullet-list--"], .editor-styles-wrapper .wp-block-list li.iis-list-icon { list-style: none !important; }',
+		'css' => '.editor-styles-wrapper .wp-block-list[class*="bullet-list--"], .editor-styles-wrapper .wp-block-list li[class*="bullet-list--"], .editor-styles-wrapper .wp-block-list li.iis-list-icon { list-style: none !important; } .editor-styles-wrapper .wp-block-list.bullet-list--heart-variant > li[class*="bullet-list--"]:not(.bullet-list--heart-variant)::after { content: none; }',
 	];
 
 	return $settings;
